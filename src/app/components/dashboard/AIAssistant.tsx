@@ -184,8 +184,8 @@ export function AIAssistant() {
   const initMessages = (): Message[] => [{
     role: 'assistant',
     text: lang === 'sw'
-      ? `Habari! Mimi ni mshauri wako wa fedha wa BudgetEase. 🤖\nNiulize chochote kuhusu matumizi yako!`
-      : `Hello! I'm your BudgetEase financial assistant. 🤖\nAsk me anything about your spending!`,
+      ? `Habari! Mimi ni mshauri wako wa fedha wa PesaPlan. 🤖\nNiulize chochote kuhusu matumizi yako!`
+      : `Hello! I'm your PesaPlan financial assistant. 🤖\nAsk me anything about your spending!`,
   }];
 
   return (
@@ -370,7 +370,7 @@ export function AIAssistant() {
 
                   {/* Text info */}
                   <div>
-                    <p className="font-bold text-sm tracking-wide">BudgetEase AI</p>
+                    <p className="font-bold text-sm tracking-wide">PesaPlan AI</p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       {/* Pulsing live status dot */}
                       <span className="relative flex h-2 w-2">

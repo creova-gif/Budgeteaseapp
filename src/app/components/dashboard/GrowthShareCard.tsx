@@ -32,8 +32,8 @@ export function GrowthShareCard() {
 
   // Generate a dynamic share text
   const shareText = lang === 'sw'
-    ? `🌟 BudgetEase Tanzania!\n\nNarekodi matumizi yangu kwa ${streak} siku mfululizo! 🔥\nNimeokolewa ${fmt(saved)} mwezi huu.\n${completedGoals > 0 ? `✅ Malengo ${completedGoals} yamekamilika!\n` : ''}Jaribu BudgetEase - programu bora ya bajeti kwa Watanzania! 📱💚\n#BudgetEase #AkibaTanzania`
-    : `🌟 BudgetEase — East Africa's #1 Budget App!\n\nI've been logging my finances for ${streak} days straight! 🔥\nSaved ${fmt(saved)} this month.\n${completedGoals > 0 ? `✅ Completed ${completedGoals} goals!\n` : ''}Try BudgetEase — the best budgeting app for East Africa! 📱💚\n#BudgetEase #EastAfrica`;
+    ? `🌟 PesaPlan Tanzania!\n\nNarekodi matumizi yangu kwa ${streak} siku mfululizo! 🔥\nNimeokolewa ${fmt(saved)} mwezi huu.\n${completedGoals > 0 ? `✅ Malengo ${completedGoals} yamekamilika!\n` : ''}Jaribu PesaPlan - programu bora ya bajeti kwa Watanzania! 📱💚\n#PesaPlan #AkibaTanzania`
+    : `🌟 PesaPlan — East Africa's #1 Budget App!\n\nI've been logging my finances for ${streak} days straight! 🔥\nSaved ${fmt(saved)} this month.\n${completedGoals > 0 ? `✅ Completed ${completedGoals} goals!\n` : ''}Try PesaPlan — the best budgeting app for East Africa! 📱💚\n#PesaPlan #EastAfrica`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText).catch(() => {});
@@ -45,7 +45,7 @@ export function GrowthShareCard() {
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'BudgetEase', text: shareText });
+        await navigator.share({ title: 'PesaPlan', text: shareText });
       } catch {}
     } else {
       handleCopy();

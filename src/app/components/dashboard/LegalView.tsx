@@ -26,8 +26,8 @@ const PRIVACY_SECTIONS: Section[] = [
     id: 'intro',
     title: { sw: 'Utangulizi', en: 'Introduction' },
     body: {
-      sw: 'BudgetEase ("Programu", "Sisi") inakuheshimu faragha yako. Sera hii ya faragha inaelezea jinsi tunavyokusanya, kutumia, na kulinda taarifa zako unapotumia programu yetu ya bajeti.',
-      en: 'BudgetEase ("App", "We") respects your privacy. This Privacy Policy explains how we collect, use, and protect your information when you use our budgeting application.',
+      sw: 'PesaPlan ("Programu", "Sisi") inakuheshimu faragha yako. Sera hii ya faragha inaelezea jinsi tunavyokusanya, kutumia, na kulinda taarifa zako unapotumia programu yetu ya bajeti.',
+      en: 'PesaPlan ("App", "We") respects your privacy. This Privacy Policy explains how we collect, use, and protect your information when you use our budgeting application.',
     },
   },
   {
@@ -50,8 +50,8 @@ const PRIVACY_SECTIONS: Section[] = [
     id: 'third-party',
     title: { sw: 'Watu wa Tatu', en: 'Third Parties' },
     body: {
-      sw: 'BudgetEase haitumii wala kushiriki data yako na kampuni yoyote ya nje. Programu inafanya kazi nje ya mtandao (offline) na haihitaji muunganisho wa intaneti kwa kazi zake za msingi.',
-      en: 'BudgetEase does not sell or share your data with any third parties. The app operates offline and does not require an internet connection for its core functions.',
+      sw: 'PesaPlan haitumii wala kushiriki data yako na kampuni yoyote ya nje. Programu inafanya kazi nje ya mtandao (offline) na haihitaji muunganisho wa intaneti kwa kazi zake za msingi.',
+      en: 'PesaPlan does not sell or share your data with any third parties. The app operates offline and does not require an internet connection for its core functions.',
     },
   },
   {
@@ -66,8 +66,8 @@ const PRIVACY_SECTIONS: Section[] = [
     id: 'minors',
     title: { sw: 'Watoto', en: 'Minors' },
     body: {
-      sw: 'BudgetEase imetengenezwa kwa watu wazima wenye umri wa miaka 13 na zaidi. Hatukusanyi kwa makusudi data ya watoto chini ya miaka 13.',
-      en: 'BudgetEase is designed for users aged 13 and older. We do not knowingly collect data from children under 13 years of age.',
+      sw: 'PesaPlan imetengenezwa kwa watu wazima wenye umri wa miaka 13 na zaidi. Hatukusanyi kwa makusudi data ya watoto chini ya miaka 13.',
+      en: 'PesaPlan is designed for users aged 13 and older. We do not knowingly collect data from children under 13 years of age.',
     },
   },
   {
@@ -82,8 +82,8 @@ const PRIVACY_SECTIONS: Section[] = [
     id: 'contact',
     title: { sw: 'Wasiliana Nasi', en: 'Contact Us' },
     body: {
-      sw: 'Kwa maswali kuhusu faragha:\n📧 support@budgetease.tz\n🌐 www.budgetease.tz\n📍 Dar es Salaam, Tanzania',
-      en: 'For privacy questions:\n📧 support@budgetease.tz\n🌐 www.budgetease.tz\n📍 Dar es Salaam, Tanzania',
+      sw: 'Kwa maswali kuhusu faragha:\n📧 support@pesaplan.tz\n🌐 www.pesaplan.tz\n📍 Dar es Salaam, Tanzania',
+      en: 'For privacy questions:\n📧 support@pesaplan.tz\n🌐 www.pesaplan.tz\n📍 Dar es Salaam, Tanzania',
     },
   },
 ];
@@ -93,40 +93,40 @@ const TERMS_SECTIONS: Section[] = [
     id: 'agreement',
     title: { sw: 'Makubaliano', en: 'Agreement' },
     body: {
-      sw: 'Kwa kutumia BudgetEase, unakubaliana na Masharti haya ya Huduma. Ikiwa hukubaliani, tafadhali acha kutumia programu.',
-      en: 'By using BudgetEase, you agree to these Terms of Service. If you do not agree, please discontinue use of the app.',
+      sw: 'Kwa kutumia PesaPlan, unakubaliana na Masharti haya ya Huduma. Ikiwa hukubaliani, tafadhali acha kutumia programu.',
+      en: 'By using PesaPlan, you agree to these Terms of Service. If you do not agree, please discontinue use of the app.',
     },
   },
   {
     id: 'service',
     title: { sw: 'Huduma Inayotolewa', en: 'Service Provided' },
     body: {
-      sw: 'BudgetEase ni programu ya usimamizi wa fedha binafsi. Inakusaidia:\n• Kurekodi mapato na matumizi\n• Kufuatilia malengo ya akiba\n• Kupata maarifa ya matumizi yako\n\nHAITOLEI ushauri wa uwekezaji wa kitaalamu wala huduma za benki.',
-      en: 'BudgetEase is a personal finance management app. It helps you:\n• Record income and expenses\n• Track savings goals\n• Get spending insights\n\nIt does NOT provide professional investment advice or banking services.',
+      sw: 'PesaPlan ni programu ya usimamizi wa fedha binafsi. Inakusaidia:\n• Kurekodi mapato na matumizi\n• Kufuatilia malengo ya akiba\n• Kupata maarifa ya matumizi yako\n\nHAITOLEI ushauri wa uwekezaji wa kitaalamu wala huduma za benki.',
+      en: 'PesaPlan is a personal finance management app. It helps you:\n• Record income and expenses\n• Track savings goals\n• Get spending insights\n\nIt does NOT provide professional investment advice or banking services.',
     },
   },
   {
     id: 'accuracy',
     title: { sw: 'Usahihi wa Data', en: 'Data Accuracy' },
     body: {
-      sw: 'Wewe peke yako una jukumu la usahihi wa data unayoingiza. BudgetEase haitoi uhakika kwamba hesabu au ushauri wowote ndani ya programu ni sahihi kwa maamuzi yako ya kibinafsi ya fedha.',
-      en: 'You are solely responsible for the accuracy of data you enter. BudgetEase does not guarantee that any calculations or insights are accurate for your personal financial decisions.',
+      sw: 'Wewe peke yako una jukumu la usahihi wa data unayoingiza. PesaPlan haitoi uhakika kwamba hesabu au ushauri wowote ndani ya programu ni sahihi kwa maamuzi yako ya kibinafsi ya fedha.',
+      en: 'You are solely responsible for the accuracy of data you enter. PesaPlan does not guarantee that any calculations or insights are accurate for your personal financial decisions.',
     },
   },
   {
     id: 'liability',
     title: { sw: 'Mipaka ya Wajibu', en: 'Limitation of Liability' },
     body: {
-      sw: 'BudgetEase haitawajibika kwa:\n• Hasara za fedha zilizotokana na matumizi ya programu\n• Upotezaji wa data kutokana na hitilafu za kifaa\n• Maamuzi ya fedha yaliyofanywa kulingana na maarifa ya programu\n\nTumia programu kwa hatari yako mwenyewe.',
-      en: 'BudgetEase is not liable for:\n• Financial losses resulting from use of the app\n• Data loss due to device failures\n• Financial decisions made based on app insights\n\nUse the app at your own risk.',
+      sw: 'PesaPlan haitawajibika kwa:\n• Hasara za fedha zilizotokana na matumizi ya programu\n• Upotezaji wa data kutokana na hitilafu za kifaa\n• Maamuzi ya fedha yaliyofanywa kulingana na maarifa ya programu\n\nTumia programu kwa hatari yako mwenyewe.',
+      en: 'PesaPlan is not liable for:\n• Financial losses resulting from use of the app\n• Data loss due to device failures\n• Financial decisions made based on app insights\n\nUse the app at your own risk.',
     },
   },
   {
     id: 'ip',
     title: { sw: 'Haki za Miliki ya Akili', en: 'Intellectual Property' },
     body: {
-      sw: 'Yaliyomo yote ya BudgetEase — ikiwemo muundo, msimbo, na maudhui — yamepewa haki miliki. Hairuhusiwi kunakili, kusambaza, au kubadilisha programu bila idhini ya maandishi.',
-      en: 'All BudgetEase content — including design, code, and content — is protected by intellectual property rights. You may not copy, distribute, or modify the app without written permission.',
+      sw: 'Yaliyomo yote ya PesaPlan — ikiwemo muundo, msimbo, na maudhui — yamepewa haki miliki. Hairuhusiwi kunakili, kusambaza, au kubadilisha programu bila idhini ya maandishi.',
+      en: 'All PesaPlan content — including design, code, and content — is protected by intellectual property rights. You may not copy, distribute, or modify the app without written permission.',
     },
   },
   {
@@ -282,11 +282,11 @@ export function LegalView({ onBack }: LegalViewProps) {
             </p>
             <div className="flex items-center gap-2 mb-2">
               <Mail className="w-3.5 h-3.5 text-gray-400" />
-              <span className="text-xs text-gray-500">support@budgetease.tz</span>
+              <span className="text-xs text-gray-500">support@pesaplan.tz</span>
             </div>
             <div className="flex items-center gap-2">
               <Globe className="w-3.5 h-3.5 text-gray-400" />
-              <span className="text-xs text-gray-500">www.budgetease.tz</span>
+              <span className="text-xs text-gray-500">www.pesaplan.tz</span>
             </div>
           </div>
         </motion.div>

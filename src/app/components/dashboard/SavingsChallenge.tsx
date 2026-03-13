@@ -274,8 +274,8 @@ export function SavingsChallenge() {
                 <p className="text-xs text-gray-600">
                   <span className="font-bold text-gray-800">{showStart.communityPct}%</span>{' '}
                   {lang === 'sw'
-                    ? 'ya watumiaji wa BudgetEase wanaofanya changamoto hii wanafanikiwa.'
-                    : 'of BudgetEase users taking this challenge succeed.'}
+                    ? 'ya watumiaji wa PesaPlan wanaofanya changamoto hii wanafanikiwa.'
+                    : 'of PesaPlan users taking this challenge succeed.'}
                 </p>
               </div>
 

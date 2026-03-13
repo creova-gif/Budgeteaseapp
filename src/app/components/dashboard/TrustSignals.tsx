@@ -118,8 +118,8 @@ export function TrustSignals() {
               <div className="px-4 py-3 bg-amber-50">
                 <p className="text-xs text-amber-700 leading-relaxed">
                   ⚠️ {lang === 'sw'
-                    ? 'BudgetEase ni chombo cha msaada wa bajeti tu. Haifanyi maamuzi ya uwekezaji wa kitaalamu. Thamani zote zinahesabiwa kutoka kwa data unayoingiza wewe mwenyewe.'
-                    : 'BudgetEase is a budgeting aid only. It does not make professional investment decisions. All values are calculated from data you enter yourself.'}
+                    ? 'PesaPlan ni chombo cha msaada wa bajeti tu. Haifanyi maamuzi ya uwekezaji wa kitaalamu. Thamani zote zinahesabiwa kutoka kwa data unayoingiza wewe mwenyewe.'
+                    : 'PesaPlan is a budgeting aid only. It does not make professional investment decisions. All values are calculated from data you enter yourself.'}
                 </p>
               </div>
             </div>

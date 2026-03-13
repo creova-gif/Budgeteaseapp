@@ -136,7 +136,7 @@ const defaultState: AppState = {
 
 function loadPersistedState(): AppState {
   try {
-    const saved = localStorage.getItem('budgetease_v1');
+    const saved = localStorage.getItem('pesaplan_v1');
     if (saved) {
       const parsed = JSON.parse(saved);
       return {
@@ -177,7 +177,7 @@ function AppProvider({ children }: { children: ReactNode }) {
   // Persist state to localStorage whenever it changes
   useEffect(() => {
     try {
-      localStorage.setItem('budgetease_v1', JSON.stringify(state));
+      localStorage.setItem('pesaplan_v1', JSON.stringify(state));
     } catch (e) {
       console.error('Failed to persist state', e);
     }
@@ -331,7 +331,7 @@ function AppProvider({ children }: { children: ReactNode }) {
 
   const clearAllData = () => {
     try {
-      localStorage.removeItem('budgetease_v1');
+      localStorage.removeItem('pesaplan_v1');
     } catch (e) {}
     Analytics.clearCrashLog();
     setState(defaultState);

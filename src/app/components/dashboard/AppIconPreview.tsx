@@ -26,7 +26,7 @@ export function AppIcon({ size = 120, className = '' }: AppIconPreviewProps) {
       viewBox={`0 0 ${size} ${size}`}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="BudgetEase app icon"
+      aria-label="PesaPlan app icon"
       role="img"
     >
       <defs>
@@ -136,7 +136,7 @@ export function AppIconPreview() {
       <div className="bg-gradient-to-r from-emerald-700 to-teal-700 px-4 py-4 flex items-center gap-3">
         <AppIcon size={44} />
         <div>
-          <p className="text-sm font-black text-white">BudgetEase</p>
+          <p className="text-sm font-black text-white">PesaPlan</p>
           <p className="text-xs text-white/70">
             {lang === 'sw' ? 'Muundo wa Ikoni ya Programu' : 'App Icon Design Reference'}
           </p>
@@ -178,7 +178,7 @@ export function AppIconPreview() {
         <div className="flex items-center gap-4">
           <AppIcon size={60} />
           <div>
-            <p className="text-sm font-black text-white">BudgetEase</p>
+            <p className="text-sm font-black text-white">PesaPlan</p>
             <p className="text-xs text-gray-400">{lang === 'sw' ? 'Fedha za Afrika Mashariki' : 'East Africa Finance'}</p>
           </div>
         </div>

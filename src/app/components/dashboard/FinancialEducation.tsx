@@ -62,7 +62,7 @@ const LESSONS: Lesson[] = [
     points: [
       { sw: 'Unapopata pesa, ongeza akiba KABLA ya kutumia', en: 'When income arrives, save FIRST before spending' },
       { sw: 'Hata TSh 2,000–5,000 kwa siku inaweza kuwa TSh 60,000–150,000 kwa mwezi', en: 'Even TSh 2,000–5,000/day = TSh 60–150K/month' },
-      { sw: 'Tumia BudgetEase Goals kufuatilia akiba yako', en: 'Use BudgetEase Goals to track your savings' },
+      { sw: 'Tumia PesaPlan Goals kufuatilia akiba yako', en: 'Use PesaPlan Goals to track your savings' },
     ],
   },
   {

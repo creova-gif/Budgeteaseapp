@@ -10,7 +10,7 @@ import { AppIcon } from './AppIconPreview';
  * Covers: App name, description, keywords, age rating, category, screenshots.
  */
 
-const DESCRIPTION_EN = `BudgetEase is East Africa's smartest personal finance app — built from the ground up for M-Pesa, Airtel Money, and Tigo Pesa users in Tanzania and across the region.
+const DESCRIPTION_EN = `PesaPlan is East Africa's smartest personal finance app — built from the ground up for M-Pesa, Airtel Money, and Tigo Pesa users in Tanzania and across the region.
 
 TRACK EVERY SHILLING
 • Log income and expenses in under 5 seconds
@@ -33,7 +33,7 @@ SAVINGS GOALS & CHALLENGES
 • Round-up savings on every expense automatically
 
 AI FINANCIAL ASSISTANT
-• Ask BudgetEase AI anything about your money
+• Ask PesaPlan AI anything about your money
 • Get personalized tips in Swahili or English
 • Powered by your own spending data — fully private
 
@@ -48,7 +48,7 @@ BUILT FOR EAST AFRICA
 • Currency: Tanzanian Shilling (TZS)
 • Made in Dar es Salaam 🇹🇿`;
 
-const DESCRIPTION_SW = `BudgetEase ni programu bora zaidi ya fedha za kibinafsi Afrika Mashariki — imetengenezwa maalum kwa watumiaji wa M-Pesa, Airtel Money, na Tigo Pesa nchini Tanzania na mkoa wote.
+const DESCRIPTION_SW = `PesaPlan ni programu bora zaidi ya fedha za kibinafsi Afrika Mashariki — imetengenezwa maalum kwa watumiaji wa M-Pesa, Airtel Money, na Tigo Pesa nchini Tanzania na mkoa wote.
 
 FUATILIA KILA SHILINGI
 • Rekodi mapato na matumizi kwa sekunde chini ya 5
@@ -71,7 +71,7 @@ MALENGO NA CHANGAMOTO ZA AKIBA
 • Akiba ya round-up katika kila matumizi otomatifu
 
 MSHAURI WA AI WA FEDHA
-• Uliza BudgetEase AI chochote kuhusu pesa zako
+• Uliza PesaPlan AI chochote kuhusu pesa zako
 • Pata vidokezo vya kibinafsi kwa Kiswahili au Kiingereza
 • Inafanya kazi na data yako — faragha kamili
 
@@ -123,7 +123,7 @@ export function AppStoreListing() {
               {/* App icon preview */}
               <AppIcon size={48} />
               <div className="text-left">
-                <p className="font-black text-sm">BudgetEase</p>
+                <p className="font-black text-sm">PesaPlan</p>
                 <p className="text-xs text-white/70">
                   {lang === 'sw' ? 'Muswada wa Orodha ya App Store' : 'App Store Listing Draft'}
                 </p>

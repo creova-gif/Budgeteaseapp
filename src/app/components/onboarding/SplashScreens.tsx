@@ -72,7 +72,7 @@ export function SplashScreens({ onComplete }: SplashScreensProps) {
               backgroundImage: 'linear-gradient(135deg, #ffffff 30%, #6ee7b7 100%)',
             }}
           >
-            BudgetEase
+            PesaPlan
           </h1>
         </motion.div>
 
@@ -115,7 +115,7 @@ export function SplashScreens({ onComplete }: SplashScreensProps) {
           transition={{ delay: 1.15, type: 'spring', stiffness: 240, damping: 22 }}
           whileTap={{ scale: 0.97 }}
           className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-3xl py-5 shadow-2xl shadow-emerald-500/30 relative overflow-hidden"
-          aria-label={lang === 'sw' ? 'Endelea kuanza BudgetEase' : 'Continue to start BudgetEase'}
+          aria-label={lang === 'sw' ? 'Endelea kuanza PesaPlan' : 'Continue to start PesaPlan'}
         >
           {/* Shimmer on button */}
           <motion.div

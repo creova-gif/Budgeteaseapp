@@ -134,7 +134,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
     ? (setupStep === 'enter'
         ? (lang === 'sw' ? 'Chagua nambari 4 za siri' : 'Choose a 4-digit secret code')
         : (lang === 'sw' ? 'Ingiza tena PIN yako kuthibitisha' : 'Re-enter your PIN to confirm'))
-    : (lang === 'sw' ? 'BudgetEase imelindwa' : 'BudgetEase is protected');
+    : (lang === 'sw' ? 'PesaPlan imelindwa' : 'PesaPlan is protected');
 
   const numpad = [
     ['1','2','3'],
@@ -175,7 +175,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
         </motion.div>
 
         {/* Brand */}
-        <p className="text-white/40 text-xs tracking-[0.25em] uppercase mb-1">BudgetEase</p>
+        <p className="text-white/40 text-xs tracking-[0.25em] uppercase mb-1">PesaPlan</p>
 
         {/* Title */}
         <motion.h1

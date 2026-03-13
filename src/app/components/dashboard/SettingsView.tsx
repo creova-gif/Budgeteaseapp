@@ -49,7 +49,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
     const link = document.createElement('a');
     link.setAttribute('href', url);
     const today = new Date().toISOString().split('T')[0];
-    link.setAttribute('download', `budgetease_${today}.csv`);
+    link.setAttribute('download', `pesaplan_${today}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -341,7 +341,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
 
         {/* App Info */}
         <div className="text-center text-xs text-gray-400 py-4">
-          <p className="font-medium">BudgetEase v1.0.0</p>
+          <p className="font-medium">PesaPlan v1.0.0</p>
           <p className="mt-0.5">{lang === 'sw' ? 'Imetengenezwa kwa East Africa 🌍' : 'Made for East Africa 🌍'}</p>
           <button
             onClick={() => setShowLegal(true)}

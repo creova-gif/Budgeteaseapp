@@ -235,8 +235,8 @@ export function CrashMonitor() {
                     <div className="px-4 pb-4 pt-2">
                       <p className="text-xs text-gray-400 mb-3">
                         {lang === 'sw'
-                          ? 'Mfumo wa Analytics wa BudgetEase umejengwa kuiga Firebase Crashlytics API. Kufanya mabadiliko:'
-                          : 'BudgetEase Analytics mirrors the Firebase Crashlytics API exactly. To swap:'}
+                          ? 'Mfumo wa Analytics wa PesaPlan umejengwa kuiga Firebase Crashlytics API. Kufanya mabadiliko:'
+                          : 'PesaPlan Analytics mirrors the Firebase Crashlytics API exactly. To swap:'}
                       </p>
                       <div className="space-y-3">
                         {FIREBASE_STEPS.map((s) => (
