@@ -20,6 +20,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── iOS Safe Area Support ──────────────────────────────────────────────────
+   Required for iPhone X/11/12/13/14/15 notch and Dynamic Island.
+   viewport-fit=cover is set on the <meta viewport> tag.
+   These classes are applied manually to the bottom nav and top headers.
+*/
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-area-bottom-nav {
+  /* Adds home-indicator clearance to bottom nav */
+  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+}
+.min-safe-top {
+  /* Minimum of 2.5rem OR safe-area top (whichever is larger) */
+  padding-top: max(2.5rem, env(safe-area-inset-top, 2.5rem));
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

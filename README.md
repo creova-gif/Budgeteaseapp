@@ -1,7 +1,7 @@
 
-  # BudgetEase App
+  # Pesa Plan
 
-  This is a code bundle for BudgetEase App. The original project is available at https://www.figma.com/design/KfOqDTjSdYoT86eUC0FVMM/BudgetEase-App.
+  This is a code bundle for Pesa Plan. The original project is available at https://www.figma.com/design/KfOqDTjSdYoT86eUC0FVMM/Pesa-Plan.
 
   ## Running the code
 
