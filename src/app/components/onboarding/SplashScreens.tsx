@@ -41,7 +41,7 @@ export function SplashScreens({ onComplete }: SplashScreensProps) {
   const lang = state.language;
 
   return (
-    <div className="h-screen bg-gray-950 flex flex-col items-center justify-between overflow-hidden relative select-none">
+    <div className="h-screen bg-emerald-950 flex flex-col items-center justify-between overflow-hidden relative select-none">
 
       {/* Ambient gradient blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -141,7 +141,7 @@ export function SplashScreens({ onComplete }: SplashScreensProps) {
                   <motion.div
                     animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
                     transition={{ repeat: Infinity, duration: 2, delay: i * 0.4 }}
-                    className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-white rounded-full border-2 border-gray-950"
+                    className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-white rounded-full border-2 border-emerald-950"
                   />
                 </div>
 
