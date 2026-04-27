@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, Bot, Sparkles } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { t } from '@/app/utils/translations';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
 import { formatCurrency, REGION_CONFIG } from '@/app/utils/currency';
 
@@ -390,11 +391,11 @@ export function AIAssistant() {
                   {/* Text info */}
                   <div>
                     <p className="font-bold text-sm tracking-wide">
-                      {lang === 'sw' ? 'Msaidizi wa Bajeti' : 'Budget Coach'}
+                      {t('budgetCoach', lang)}
                     </p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <p className="text-xs text-white/75">
-                        {lang === 'sw' ? 'Maswali kuhusu fedha zako' : 'Ask about your spending'}
+                        {t('askAboutSpending', lang)}
                       </p>
                     </div>
                   </div>
@@ -441,7 +442,7 @@ export function AIAssistant() {
               {messages.length <= 1 && (
                 <div className="px-4 pb-2">
                   <p className="text-xs text-gray-400 mb-2">
-                    {lang === 'sw' ? '💬 Maswali ya haraka' : '💬 Quick questions'}
+                    {`💬 ${t('quickQuestions', lang)}`}
                   </p>
                   <div className="flex gap-2 flex-wrap">
                     {QUICK_QUESTIONS.map(q => (
@@ -463,7 +464,7 @@ export function AIAssistant() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') sendMessage(input); }}
-                  placeholder={lang === 'sw' ? 'Niulize chochote...' : 'Ask me anything...'}
+                  placeholder={t('askMeAnything', lang)}
                   className="flex-1 border-2 border-gray-200 rounded-2xl px-4 py-2.5 text-sm outline-none focus:border-emerald-400 transition"
                 />
                 <motion.button

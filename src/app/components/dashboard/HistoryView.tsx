@@ -80,25 +80,25 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     if (format(date, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd'))
-      return lang === 'sw' ? 'Leo' : 'Today';
+      return t('today', lang);
     if (format(date, 'yyyy-MM-dd') === format(yesterday, 'yyyy-MM-dd'))
-      return lang === 'sw' ? 'Jana' : 'Yesterday';
+      return t('yesterday', lang);
     return format(date, 'MMM dd, yyyy');
   };
 
   const typeOptions: { value: FilterType; label: string }[] = [
-    { value: 'all', label: lang === 'sw' ? 'Zote' : 'All' },
-    { value: 'income', label: lang === 'sw' ? 'Mapato' : 'Income' },
-    { value: 'expense', label: lang === 'sw' ? 'Matumizi' : 'Expenses' },
+    { value: 'all', label: t('all', lang) },
+    { value: 'income', label: t('income', lang) },
+    { value: 'expense', label: t('expense', lang) },
   ];
 
   const sourceOptions: { value: FilterSource; label: string }[] = [
-    { value: 'all', label: lang === 'sw' ? 'Zote' : 'All' },
-    { value: 'cash', label: lang === 'sw' ? 'Taslimu' : 'Cash' },
+    { value: 'all', label: t('all', lang) },
+    { value: 'cash', label: t('cash', lang) },
     { value: 'mpesa', label: 'M-Pesa' },
     { value: 'airtel', label: 'Airtel' },
     { value: 'tigo', label: 'Tigo' },
-    { value: 'bank', label: lang === 'sw' ? 'Benki' : 'Bank' },
+    { value: 'bank', label: t('bank', lang) },
   ];
 
   // Swipe handlers
@@ -165,7 +165,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
         </div>
         <p className="text-sm opacity-80 ml-14">
           {filteredTransactions.length} {lang === 'sw' ? 'miamala' : 'transactions'}
-          {isFiltered && ` (${lang === 'sw' ? 'imechujwa' : 'filtered'})`}
+          {isFiltered && ` (${t('filtered', lang)})`}
         </p>
       </div>
 
@@ -194,7 +194,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
       {/* Swipe hint */}
       {filteredTransactions.length > 0 && (
         <p className="text-xs text-gray-400 text-center py-2 bg-white border-b border-gray-100">
-          {lang === 'sw' ? '← Buruta kufuta · Buruta → kuhariri' : '← Swipe to delete · Swipe → to edit'}
+          {t('swipeHint', lang)}
         </p>
       )}
 
@@ -207,16 +207,14 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
           >
             <p className="text-4xl mb-3">📭</p>
             <p className="text-gray-500 font-medium">
-              {isFiltered
-                ? (lang === 'sw' ? 'Hakuna miamala inayolingana na kichujio' : 'No transactions match the filter')
-                : (lang === 'sw' ? 'Bado hakuna miamala' : 'No transactions yet')}
+              {isFiltered ? t('noTransactionsFilter', lang) : t('noTransactionsYet', lang)}
             </p>
             {isFiltered && (
               <button
                 onClick={() => { setFilterType('all'); setFilterSource('all'); setFilterDateRange('all'); }}
                 className="mt-3 text-sm text-orange-600 font-medium"
               >
-                {lang === 'sw' ? 'Futa kichujio' : 'Clear all filters'}
+                {t('clearFilters', lang)}
               </button>
             )}
           </motion.div>
@@ -251,17 +249,15 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
                               <button
                                 onClick={() => handleDeleteTx(transaction.id)}
                                 aria-label={confirmDeleteId === transaction.id
-                                  ? (lang === 'sw' ? 'Thibitisha ufutaji' : 'Confirm delete')
-                                  : (lang === 'sw' ? 'Futa muamala' : 'Delete transaction')}
+                                  ? t('confirmDelete', lang)
+                                  : t('deleteTransaction', lang)}
                                 className={`text-white px-5 h-full flex flex-col items-center justify-center gap-0.5 transition-colors ${
                                   confirmDeleteId === transaction.id ? 'bg-red-700' : 'bg-red-500'
                                 }`}
                               >
                                 <Trash2 className="w-4 h-4" />
                                 <span className="text-xs font-semibold">
-                                  {confirmDeleteId === transaction.id
-                                    ? (lang === 'sw' ? 'Thibitisha?' : 'Confirm?')
-                                    : (lang === 'sw' ? 'Futa' : 'Delete')}
+                                  {confirmDeleteId === transaction.id ? t('confirm', lang) : t('delete', lang)}
                                 </span>
                               </button>
                               <button
@@ -269,7 +265,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
                                 className="bg-blue-500 text-white px-4 h-full flex flex-col items-center justify-center gap-0.5"
                               >
                                 <span className="text-lg leading-none">✏️</span>
-                                <span className="text-xs font-semibold">{lang === 'sw' ? 'Hariri' : 'Edit'}</span>
+                                <span className="text-xs font-semibold">{t('edit', lang)}</span>
                               </button>
                             </motion.div>
                           )}
@@ -332,7 +328,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
             {/* ── End of list ── */}
             {filteredTransactions.length <= visibleCount && filteredTransactions.length > 0 && (
               <p className="text-center text-xs text-gray-300 py-2">
-                {lang === 'sw' ? '— Mwisho wa historia —' : '— End of history —'}
+                {t('endOfHistory', lang)}
               </p>
             )}
           </div>
@@ -409,13 +405,13 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
                   onClick={() => { setFilterType('all'); setFilterSource('all'); }}
                   className="flex-1 py-3.5 border-2 border-gray-200 rounded-2xl text-gray-600 font-medium text-sm"
                 >
-                  {lang === 'sw' ? 'Futa Kichujio' : 'Clear All'}
+                  {t('clearAll', lang)}
                 </button>
                 <button
                   onClick={() => setShowFilter(false)}
                   className="flex-1 py-3.5 bg-orange-500 rounded-2xl text-white font-bold text-sm"
                 >
-                  {lang === 'sw' ? 'Tazama Matokeo' : 'Show Results'}
+                  {t('showResults', lang)}
                 </button>
               </div>
             </motion.div>

@@ -387,7 +387,7 @@ export function Dashboard() {
                     }`}>
                       {weekOverWeek.delta <= 0 ? '↓' : '↑'}
                       {Math.abs(weekOverWeek.delta)}%{' '}
-                      {lang === 'sw' ? 'ikilinganishwa na wiki iliyopita' : 'vs last week'}
+                      {t('vsLastWeek', lang)}
                     </div>
                   </motion.div>
                 )}
@@ -426,7 +426,7 @@ export function Dashboard() {
                   >
                     <RotateCcw className="w-5 h-5 text-yellow-300" />
                     <span className="text-xs text-white font-semibold">
-                      {lang === 'sw' ? 'Rudia' : 'Repeat'}
+                      {t('repeat', lang)}
                     </span>
                   </motion.button>
                 </div>
@@ -449,7 +449,7 @@ export function Dashboard() {
                     onChange={e => setSearchQuery(e.target.value)}
                     onFocus={() => setSearchFocused(true)}
                     onBlur={() => setSearchFocused(false)}
-                    placeholder={lang === 'sw' ? 'Tafuta... "chakula wiki hii"' : 'Search... "coffee this week"'}
+                    placeholder={t('searchPlaceholder', lang)}
                     className="flex-1 text-sm text-gray-700 outline-none bg-transparent placeholder-gray-300"
                   />
                   <div className="flex items-center gap-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full px-2 py-1 shrink-0">
@@ -467,10 +467,10 @@ export function Dashboard() {
                   <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-5 pt-4 pb-3 flex items-center justify-between border-b border-emerald-100/60">
                     <div>
                       <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-0.5">
-                        {lang === 'sw' ? 'Muhtasari wa Mwezi' : 'Monthly Summary'}
+                        {t('monthlySummary', lang)}
                       </p>
                       <p className="font-black text-gray-900 text-[0.95rem] leading-tight">
-                        {lang === 'sw' ? 'Matumizi dhidi ya Mapato' : 'Spending vs Income'}
+                        {t('spendingVsIncome', lang)}
                       </p>
                     </div>
                     <button
@@ -478,7 +478,7 @@ export function Dashboard() {
                       className="flex items-center gap-1.5 text-xs text-emerald-700 font-bold bg-white border border-emerald-200 shadow-sm px-3 py-1.5 rounded-full hover:bg-emerald-50 transition"
                     >
                       <AlertTriangle className="w-3 h-3" />
-                      {lang === 'sw' ? 'Mipaka' : 'Limits'}
+                      {t('limits', lang)}
                     </button>
                   </div>
 
@@ -491,12 +491,10 @@ export function Dashboard() {
                           <TrendingUp className="w-7 h-7 text-emerald-400" />
                         </div>
                         <p className="text-sm font-bold text-gray-700">
-                          {lang === 'sw' ? 'Anza kurekodi leo' : 'Start logging today'}
+                          {t('startLoggingToday', lang)}
                         </p>
                         <p className="text-xs text-gray-400 max-w-[200px]">
-                          {lang === 'sw'
-                            ? 'Ongeza mapato au matumizi ili kuona muhtasari wako wa mwezi.'
-                            : 'Add income or expenses to see your monthly summary here.'}
+                          {t('addIncomeOrExpenses', lang)}
                         </p>
                       </div>
                     ) : (
@@ -534,7 +532,7 @@ export function Dashboard() {
                               {Math.round(arcPct)}%
                             </p>
                             <p className="text-[0.6rem] text-gray-400 font-medium">
-                              {lang === 'sw' ? 'imetumika' : 'used'}
+                              {t('used', lang)}
                             </p>
                             {monthSaved > 0 && (
                               <p className="text-[0.6rem] font-bold text-emerald-600 bg-emerald-50 rounded-full px-2 py-0.5 mt-0.5">
@@ -549,7 +547,7 @@ export function Dashboard() {
                           {/* Spent row with bar */}
                           <div>
                             <div className="flex justify-between items-center mb-1">
-                              <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Imetumika' : 'Spent'}</span>
+                              <span className="text-[11px] text-gray-400 font-medium">{t('spent', lang)}</span>
                               <span className="text-[13px] font-bold text-gray-800">{fmtK(monthlyStats.expenses)}</span>
                             </div>
                             <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -564,12 +562,12 @@ export function Dashboard() {
                           </div>
                           {/* Income */}
                           <div className="flex justify-between items-center">
-                            <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Mapato' : 'Income'}</span>
+                            <span className="text-[11px] text-gray-400 font-medium">{t('income', lang)}</span>
                             <span className="text-[13px] font-bold text-emerald-600">+{fmtK(monthlyStats.income)}</span>
                           </div>
                           {/* Left */}
                           <div className="flex justify-between items-center">
-                            <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Imebaki' : 'Left'}</span>
+                            <span className="text-[11px] text-gray-400 font-medium">{t('left', lang)}</span>
                             <span className={`text-[13px] font-bold ${monthlyStats.income - monthlyStats.expenses >= 0 ? 'text-teal-600' : 'text-red-500'}`}>
                               {monthlyStats.income - monthlyStats.expenses >= 0 ? '' : '-'}{fmtK(Math.abs(monthlyStats.income - monthlyStats.expenses))}
                             </span>
@@ -582,9 +580,7 @@ export function Dashboard() {
                           }`}>
                             <span>{monthlyStats.onTrack ? '✅' : '⚠️'}</span>
                             <span>
-                              {monthlyStats.onTrack
-                                ? (lang === 'sw' ? 'Uko kwenye njia nzuri' : 'On track this month')
-                                : (lang === 'sw' ? 'Matumizi ni makubwa' : 'Spending above pace')}
+                              {monthlyStats.onTrack ? t('onTrack', lang) : t('spendingAbovePace', lang)}
                             </span>
                           </div>
                         </div>
@@ -597,7 +593,7 @@ export function Dashboard() {
                     <div className="px-5 pb-4">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">
-                          {lang === 'sw' ? 'Mwenendo wa siku 7' : '7-day trend'}
+                          {t('sevenDayTrend', lang)}
                         </p>
                       </div>
                       <ResponsiveContainer width="100%" height={52}>
@@ -612,7 +608,7 @@ export function Dashboard() {
                           <YAxis hide />
                           <Tooltip
                             contentStyle={{ fontSize: 11, borderRadius: 10, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.1)', padding: '6px 10px' }}
-                            formatter={(v: number) => [fmtK(v), lang === 'sw' ? 'Imetumika' : 'Spent']}
+                            formatter={(v: number) => [fmtK(v), t('spent', lang)]}
                           />
                           <Area type="monotone" dataKey="spent" stroke="#10b981" strokeWidth={2} fill="url(#trendGrad)" dot={{ r: 2.5, fill: '#10b981', strokeWidth: 0 }} />
                         </AreaChart>
@@ -633,7 +629,7 @@ export function Dashboard() {
                           <Bell className="w-3.5 h-3.5 text-red-500" />
                         </div>
                         <p className="font-bold text-gray-900 text-sm">
-                          {lang === 'sw' ? 'Arifa za Bajeti' : 'Budget Alerts'}
+                          {t('budgetAlerts', lang)}
                         </p>
                       </div>
                       <span className="bg-red-500 text-white text-xs font-black px-2 py-0.5 rounded-full">
@@ -681,10 +677,10 @@ export function Dashboard() {
                     <div className="px-5 pt-5 pb-2 flex items-center justify-between">
                       <div>
                         <p className="text-xs text-gray-400 uppercase tracking-wider">
-                          {lang === 'sw' ? 'Mgawanyo wa Matumizi' : 'Spending Breakdown'}
+                          {t('spendingBreakdown', lang)}
                         </p>
                         <p className="font-black text-gray-900" style={{ fontSize: '1rem' }}>
-                          {lang === 'sw' ? 'Kwa Jamii' : 'By Category'}
+                          {t('byCategory', lang)}
                         </p>
                       </div>
                       <button onClick={() => setActiveView('insights')} className="text-xs text-emerald-600 flex items-center gap-0.5">
@@ -761,7 +757,7 @@ export function Dashboard() {
                     >
                       <p className={`text-sm font-bold mb-1 ${isHigh ? 'text-amber-900' : 'text-emerald-900'}`}>
                         {isHigh ? '⚠️' : '✅'}{' '}
-                        {lang === 'sw' ? 'Maarifa ya Matumizi' : 'Spending Insight'}
+                        {t('spendingInsight', lang)}
                       </p>
                       <p className={`text-sm leading-relaxed ${isHigh ? 'text-amber-800' : 'text-emerald-800'}`}>
                         {lang === 'sw'
@@ -841,23 +837,23 @@ export function Dashboard() {
                         <div className="py-4">
                           <div className="text-4xl mb-3">💸</div>
                           <p className="text-sm font-semibold text-gray-500 mb-1">
-                            {lang === 'sw' ? 'Anza kurekodi matumizi yako' : 'Start tracking your money'}
+                            {t('startTracking', lang)}
                           </p>
                           <p className="text-xs text-gray-400 mb-4">
-                            {lang === 'sw' ? 'Bonyeza "Matumizi" au "Mapato" hapo juu' : 'Tap "Expense" or "Income" above to begin'}
+                            {t('tapToBegin', lang)}
                           </p>
                           <motion.button
                             whileTap={{ scale: 0.97 }}
                             onClick={() => { setTxType('expense'); setShowAddTx(true); }}
                             className="bg-emerald-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-md"
                           >
-                            {lang === 'sw' ? '+ Ongeza Kwanza' : '+ Add First Entry'}
+                            {t('addFirstEntry', lang)}
                           </motion.button>
                         </div>
                       ) : (
                         <p className="text-sm text-gray-300 py-4">
                           {searchQuery
-                            ? (lang === 'sw' ? 'Hakuna matokeo' : 'No results found')
+                            ? t('noResultsFound', lang)
                             : t('noTransactions', lang)}
                         </p>
                       )}
@@ -961,7 +957,7 @@ export function Dashboard() {
                     onClick={() => window.dispatchEvent(new CustomEvent('pesaplan:open-ai'))}
                     className="mt-3 w-full bg-white/15 hover:bg-white/25 rounded-2xl py-2.5 text-sm font-semibold transition text-center"
                   >
-                    {lang === 'sw' ? 'Uliza Msaidizi zaidi →' : 'Ask Assistant more →'}
+                    {t('askAssistantMore', lang)}
                   </button>
                 </motion.div>
 
@@ -1114,7 +1110,7 @@ function GoalContributeSheet({
                 : 'border-dashed border-purple-300 text-purple-600 hover:bg-purple-50'
             }`}
           >
-            <span>💡 {lang === 'sw' ? 'Pendekezo la leo' : 'Suggested today'}</span>
+            <span>💡 {t('suggestedToday', lang)}</span>
             <span>{fmt(suggestedAmount)}</span>
           </button>
         )}
@@ -1146,7 +1142,7 @@ function GoalContributeSheet({
           disabled={!amount || parseFloat(amount) <= 0}
           className="w-full bg-purple-600 disabled:opacity-40 text-white rounded-2xl py-4 font-black transition"
         >
-          {lang === 'sw' ? 'Weka Akiba' : 'Save Now'}
+          {t('saveNow', lang)}
         </motion.button>
       </motion.div>
     </>

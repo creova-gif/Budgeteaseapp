@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Delete, Fingerprint, ShieldCheck } from 'lucide-react';
 import { useApp, verifyPin } from '@/app/App';
 import { Analytics } from '@/app/utils/analytics';
+import { t } from '@/app/utils/translations';
 
 /**
  * Audit Item 11 — Security: PIN App Lock
@@ -104,7 +105,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
         lang === 'sw'
           ? `PIN isiyo sahihi (${newCount} jaribio)`
           : `Wrong PIN (attempt ${newCount})`
-      );
+      ); // count embedded — stays as ternary
       Analytics.logEvent('app_unlock_failed', { attempt: newCount });
     }
   };
@@ -117,7 +118,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
     } else {
       setShakeKey(k => k + 1);
       setConfirmPin('');
-      setErrorMsg(lang === 'sw' ? 'PIN hazilingani. Jaribu tena.' : 'PINs do not match. Try again.');
+      setErrorMsg(t('pinsNoMatch', lang));
     }
   };
 
@@ -125,16 +126,12 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
   const currentLength = activePin.length;
 
   const title = isSetup
-    ? (setupStep === 'enter'
-        ? (lang === 'sw' ? 'Weka PIN yako' : 'Create your PIN')
-        : (lang === 'sw' ? 'Thibitisha PIN yako' : 'Confirm your PIN'))
-    : (lang === 'sw' ? 'Weka PIN kufungua' : 'Enter PIN to unlock');
+    ? (setupStep === 'enter' ? t('createPin', lang) : t('confirmPin', lang))
+    : t('enterPin', lang);
 
   const subtitle = isSetup
-    ? (setupStep === 'enter'
-        ? (lang === 'sw' ? 'Chagua nambari 4 za siri' : 'Choose a 4-digit secret code')
-        : (lang === 'sw' ? 'Ingiza tena PIN yako kuthibitisha' : 'Re-enter your PIN to confirm'))
-    : (lang === 'sw' ? 'PesaPlan imelindwa' : 'PesaPlan is protected');
+    ? (setupStep === 'enter' ? t('chooseDigits', lang) : t('reEnterPin', lang))
+    : t('appProtected', lang);
 
   const numpad = [
     ['1','2','3'],
@@ -191,9 +188,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
         {/* PIN recovery warning — shown only during setup */}
         {isSetup && setupStep === 'enter' && (
           <p className="text-amber-400/70 text-xs text-center px-8 mb-7">
-            {lang === 'sw'
-              ? '⚠️ Ukisahau PIN yako, itabidi ufute data yote ya programu.'
-              : '⚠️ If you forget your PIN, you will need to clear all app data.'}
+            ⚠️ {t('pinRecoveryWarning', lang)}
           </p>
         )}
         {!isSetup && <div className="mb-10" />}
@@ -269,7 +264,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
                   onClick={() => isDelete ? pressDelete() : pressDigit(key)}
                   whileTap={{ scale: 0.88, backgroundColor: 'rgba(255,255,255,0.12)' }}
                   className="flex items-center justify-center h-16 rounded-2xl bg-white/[0.07] border border-white/[0.08] active:bg-white/[0.15] transition-colors"
-                  aria-label={isDelete ? (lang === 'sw' ? 'Futa' : 'Delete') : key}
+                  aria-label={isDelete ? t('delete', lang) : key}
                 >
                   {isDelete
                     ? <Delete className="w-5 h-5 text-white/70" />
@@ -292,7 +287,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
               onClick={onCancel}
               className="text-white/30 text-sm"
             >
-              {lang === 'sw' ? 'Ghairi' : 'Cancel'}
+              {t('cancel', lang)}
             </button>
           )}
           {!isSetup && failCount >= 3 && (
@@ -309,7 +304,7 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
               }}
               className="text-orange-400/70 text-sm"
             >
-              {lang === 'sw' ? 'Sahau PIN' : 'Forgot PIN'}
+              {t('forgotPin', lang)}
             </button>
           )}
         </div>

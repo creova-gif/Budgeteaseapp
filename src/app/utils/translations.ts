@@ -211,6 +211,11 @@ export const translations = {
   chooseDigits:        { en: 'Choose a 4-digit secret code', sw: 'Chagua nambari 4 za siri' },
   reEnterPin:          { en: 'Re-enter your PIN to confirm', sw: 'Ingiza tena PIN yako kuthibitisha' },
   pinsNoMatch:         { en: 'PINs do not match. Try again.', sw: 'PIN hazilingani. Jaribu tena.' },
+  pinProtected:        { en: 'PIN Protected', sw: 'PIN Imewezeshwa' },
+  pinDisabled:         { en: 'PIN Disabled', sw: 'PIN Imezimwa' },
+  disablePinLock:      { en: 'Disable PIN Lock?', sw: 'Zima Kufunga?' },
+  pinRecoveryWarning:  { en: 'If you forget your PIN, you will need to clear all app data.', sw: 'Ukisahau PIN yako, itabidi ufute data yote ya programu.' },
+  appProtected:        { en: 'PesaPlan is protected', sw: 'PesaPlan imelindwa' },
 
   // Misc card labels
   netWorth:            { en: 'Net Worth', sw: 'Thamani Halisi' },
@@ -221,6 +226,116 @@ export const translations = {
   savedLabel:          { en: 'Saved', sw: 'Imeokolewa' },
   lessonsLabel:        { en: 'Lessons', sw: 'Masomo' },
   challengesLabel:     { en: 'Challenges', sw: 'Changamoto' },
+
+  // Security & Settings
+  security:            { en: 'Security', sw: 'Usalama' },
+  actions:             { en: 'Actions', sw: 'Vitendo' },
+  yourName:            { en: 'Your Name', sw: 'Jina Lako' },
+  saveChanges:         { en: 'Save Changes', sw: 'Hifadhi Mabadiliko' },
+  eraseAllData:        { en: 'Erase all data and restart', sw: 'Futa data zote na anza upya' },
+  deleteAllDataTitle:  { en: 'Delete All Data?', sw: 'Futa Data Zote?' },
+  yesDelete:           { en: 'Yes, Delete', sw: 'Ndio, Futa' },
+  noDataToExport:      { en: 'No data to export', sw: 'Hakuna data ya kuhamisha' },
+
+  // Backup / Restore
+  saveBackupJSON:      { en: 'Save Backup (JSON)', sw: 'Hifadhi Nakala (JSON)' },
+  fullDataBackup:      { en: 'Full data backup you can restore later', sw: 'Hifadhi data yote kwa usalama' },
+  restoreBackupJSON:   { en: 'Restore Backup (JSON)', sw: 'Rejesha Nakala (JSON)' },
+  restoreFromFile:     { en: 'Restore from a saved backup file', sw: 'Rejesha kutoka faili ya nakala' },
+  restoredDone:        { en: 'Restored!', sw: 'Imerejesha!' },
+  restoreBackupTitle:  { en: 'Restore Backup?', sw: 'Rejesha Nakala?' },
+  yesRestore:          { en: 'Yes, Restore', sw: 'Ndio, Rejesha' },
+  invalidBackupFile:   { en: 'Invalid file — not a PesaPlan backup', sw: 'Faili batili — si faili la PesaPlan' },
+  invalidJSONFile:     { en: 'Invalid file — could not parse JSON', sw: 'Faili batili — JSON isiyo sahihi' },
+  dataStoredDevice:    { en: 'All data saved on this device', sw: 'Data zote zimehifadhiwa kwenye kifaa' },
+  connected:           { en: 'Connected!', sw: 'Umeunganishwa!' },
+  noConnection:        { en: 'No connection', sw: 'Hakuna mtandao' },
+
+  // Budget Coach (AIAssistant)
+  budgetCoach:         { en: 'Budget Coach', sw: 'Msaidizi wa Bajeti' },
+  askAboutSpending:    { en: 'Ask about your spending', sw: 'Maswali kuhusu fedha zako' },
+  askMeAnything:       { en: 'Ask me anything...', sw: 'Niulize chochote...' },
+  quickQuestions:      { en: 'Quick questions', sw: 'Maswali ya haraka' },
+
+  // History
+  noResultsFound:      { en: 'No results found', sw: 'Hakuna matokeo' },
+  noTransactionsFilter: { en: 'No transactions match the filter', sw: 'Hakuna miamala inayolingana na kichujio' },
+  endOfHistory:        { en: '— End of history —', sw: '— Mwisho wa historia —' },
+  clearFilters:        { en: 'Clear all filters', sw: 'Futa kichujio' },
+  totalTransactions:   { en: 'Total Transactions', sw: 'Jumla ya Miamala' },
+  filtered:            { en: 'filtered', sw: 'imechujwa' },
+
+  // Dashboard / Goals
+  repeat:              { en: 'Repeat', sw: 'Rudia' },
+  summary:             { en: 'Summary', sw: 'Muhtasari' },
+  byCategory:          { en: 'By Category', sw: 'Kwa Jamii' },
+  noTransactionsYet:   { en: 'No transactions yet', sw: 'Bado hakuna miamala' },
+  saveNow:             { en: 'Save Now', sw: 'Weka Akiba' },
+  suggestedToday:      { en: 'Suggested today', sw: 'Pendekezo la leo' },
+  overdue:             { en: 'Overdue', sw: 'Imepita' },
+  goalName:            { en: 'Goal Name', sw: 'Jina la Lengo' },
+  targetAmountLabel:   { en: 'Target Amount', sw: 'Kiasi Lengwa' },
+  askAssistantMore:    { en: 'Ask Assistant more →', sw: 'Uliza Msaidizi zaidi →' },
+
+  // Insights
+  budgetSuggestions:       { en: '🤖 Budget Suggestions', sw: '🤖 Mapendekezo ya Bajeti' },
+  thisWeeksReport:         { en: "📋 This Week's Report", sw: '📋 Ripoti ya Wiki Hii' },
+  spentMoreLastWeek:       { en: 'more than last week', sw: 'zaidi kuliko wiki iliyopita' },
+  spentLessLastWeek:       { en: 'less than last week', sw: 'chini kuliko wiki iliyopita' },
+  dailyAverage:            { en: 'Daily Average', sw: 'Wastani wa Siku' },
+  categoryBreakdown:       { en: 'Category Breakdown', sw: 'Mgawanyo wa Jamii' },
+  weeklyTrends:            { en: 'Weekly Trends (7 Days)', sw: 'Mwenendo wa Wiki (Siku 7)' },
+  addTransactionsForChart: { en: 'Add transactions to see chart', sw: 'Ongeza miamala ili uone grafu' },
+  saved:                   { en: 'Saved', sw: 'Imeokolewa' },
+  predictiveIntelligence:  { en: '🔮 Predictive Intelligence', sw: '🔮 Utabiri wa Matumizi' },
+  financialEducation:      { en: '📚 Financial Education', sw: '📚 Elimu ya Fedha' },
+
+  // Dashboard
+  vsLastWeek:          { en: 'vs last week', sw: 'ikilinganishwa na wiki iliyopita' },
+  searchPlaceholder:   { en: 'Search... "coffee this week"', sw: 'Tafuta... "chakula wiki hii"' },
+  monthlySummary:      { en: 'Monthly Summary', sw: 'Muhtasari wa Mwezi' },
+  spendingVsIncome:    { en: 'Spending vs Income', sw: 'Matumizi dhidi ya Mapato' },
+  limits:              { en: 'Limits', sw: 'Mipaka' },
+  startLoggingToday:   { en: 'Start logging today', sw: 'Anza kurekodi leo' },
+  addIncomeOrExpenses: { en: 'Add income or expenses to see your monthly summary here.', sw: 'Ongeza mapato au matumizi ili kuona muhtasari wako wa mwezi.' },
+  used:                { en: 'used', sw: 'imetumika' },
+  spendingAbovePace:   { en: 'Spending above pace', sw: 'Matumizi ni makubwa' },
+  sevenDayTrend:       { en: '7-day trend', sw: 'Mwenendo wa siku 7' },
+  budgetAlerts:        { en: 'Budget Alerts', sw: 'Arifa za Bajeti' },
+  spendingBreakdown:   { en: 'Spending Breakdown', sw: 'Mgawanyo wa Matumizi' },
+  spendingInsight:     { en: 'Spending Insight', sw: 'Maarifa ya Matumizi' },
+  startTracking:       { en: 'Start tracking your money', sw: 'Anza kurekodi matumizi yako' },
+  tapToBegin:          { en: 'Tap "Expense" or "Income" above to begin', sw: 'Bonyeza "Matumizi" au "Mapato" hapo juu' },
+  addFirstEntry:       { en: '+ Add First Entry', sw: '+ Ongeza Kwanza' },
+
+  // History
+  yesterday:           { en: 'Yesterday', sw: 'Jana' },
+  confirmDelete:       { en: 'Confirm delete', sw: 'Thibitisha ufutaji' },
+  deleteTransaction:   { en: 'Delete transaction', sw: 'Futa muamala' },
+  clearAll:            { en: 'Clear All', sw: 'Futa Kichujio' },
+  showResults:         { en: 'Show Results', sw: 'Tazama Matokeo' },
+
+  // Goals
+  goalAdded:           { en: '🎯 Goal added!', sw: '🎯 Lengo limeongezwa!' },
+  contributionAdded:   { en: '✅ Contribution added!', sw: '✅ Mchango umeongezwa!' },
+  active:              { en: 'active', sw: 'hai' },
+  done:                { en: 'Done', sw: 'Imekamilika' },
+  completed:           { en: 'Completed!', sw: 'Imekamilika!' },
+  setGoalDeadline:     { en: 'Set a goal with a deadline', sw: 'Weka lengo na muda wake' },
+  deadlineDaysOptional:{ en: 'Deadline (Days) — Optional', sw: 'Muda (Siku) — Hiari' },
+  congratulations:     { en: 'Congratulations!', sw: 'Hongera!' },
+
+  // Smart Budget Builder
+  smartBudgetBuilder:  { en: 'Smart Budget Builder', sw: 'Muundaji wa Bajeti' },
+  avg:                 { en: 'Avg:', sw: 'Wastani:' },
+
+  // Settings
+  countryCurrency:     { en: 'Country / Currency', sw: 'Nchi / Sarafu' },
+  notSet:              { en: 'Not set', sw: 'Haijawekwa' },
+  dayStreak:           { en: 'Day Streak', sw: 'Siku Mfululizo' },
+  myStats:             { en: 'My Stats', sw: 'Takwimu Zangu' },
+  downloaded:          { en: 'Downloaded!', sw: 'Imepakuliwa!' },
+  enabledTapToChange:  { en: 'Enabled — tap to change', sw: 'Imewezeshwa — gusa kubadilisha' },
 };
 
 export type TranslationKey = keyof typeof translations;

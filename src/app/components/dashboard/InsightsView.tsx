@@ -160,7 +160,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
         {/* Weekly Trends - real data */}
         <div>
           <h2 className="text-base font-bold mb-3 text-gray-900">
-            {lang === 'sw' ? 'Mwenendo wa Wiki (Siku 7)' : 'Weekly Trends (7 Days)'}
+            {t('weeklyTrends', lang)}
           </h2>
           <div className="bg-white rounded-2xl p-4 shadow-md">
             {hasWeeklyData ? (
@@ -176,7 +176,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
               </ResponsiveContainer>
             ) : (
               <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
-                {lang === 'sw' ? 'Ongeza miamala ili uone grafu' : 'Add transactions to see chart'}
+                {t('addTransactionsForChart', lang)}
               </div>
             )}
             {/* Legend */}
@@ -219,14 +219,14 @@ export function InsightsView({ onBack }: InsightsViewProps) {
           return (
             <div>
               <h2 className="text-base font-bold mb-3 text-gray-900">
-                {lang === 'sw' ? '📋 Ripoti ya Wiki Hii' : '📋 This Week\'s Report'}
+                {t('thisWeeksReport', lang)}
               </h2>
               <div className="bg-white rounded-2xl shadow-md overflow-hidden">
                 <div className="grid grid-cols-3 divide-x divide-gray-100">
                   {[
-                    { label: lang === 'sw' ? 'Mapato' : 'Income', value: formatCurrency(thisIncome), color: 'text-emerald-600' },
-                    { label: lang === 'sw' ? 'Imetumika' : 'Spent', value: formatCurrency(thisSpent), color: 'text-red-600' },
-                    { label: lang === 'sw' ? 'Imeokolewa' : 'Saved', value: formatCurrency(Math.max(0, thisSaved)), color: 'text-blue-600' },
+                    { label: t('income', lang), value: formatCurrency(thisIncome), color: 'text-emerald-600' },
+                    { label: t('spent', lang), value: formatCurrency(thisSpent), color: 'text-red-600' },
+                    { label: t('saved', lang), value: formatCurrency(Math.max(0, thisSaved)), color: 'text-blue-600' },
                   ].map(({ label, value, color }) => (
                     <div key={label} className="p-4 text-center">
                       <p className="text-xs text-gray-500 mb-1">{label}</p>
@@ -239,8 +239,8 @@ export function InsightsView({ onBack }: InsightsViewProps) {
                     spendDiff > 0 ? 'text-orange-600 bg-orange-50' : 'text-emerald-600 bg-emerald-50'
                   }`}>
                     {spendDiff > 0
-                      ? `📈 ${lang === 'sw' ? 'Umetumia' : 'Spent'} ${Math.abs(spendDiff).toFixed(0)}% ${lang === 'sw' ? 'zaidi kuliko wiki iliyopita' : 'more than last week'}`
-                      : `📉 ${lang === 'sw' ? 'Umetumia' : 'Spent'} ${Math.abs(spendDiff).toFixed(0)}% ${lang === 'sw' ? 'chini kuliko wiki iliyopita' : 'less than last week'} ✓`}
+                      ? `📈 ${t('spent', lang)} ${Math.abs(spendDiff).toFixed(0)}% ${t('spentMoreLastWeek', lang)}`
+                      : `📉 ${t('spent', lang)} ${Math.abs(spendDiff).toFixed(0)}% ${t('spentLessLastWeek', lang)} ✓`}
                   </div>
                 )}
               </div>
@@ -276,7 +276,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
           return (
             <div>
               <h2 className="text-base font-bold mb-3 text-gray-900">
-                {lang === 'sw' ? '🔮 Utabiri wa Matumizi' : '🔮 Predictive Intelligence'}
+                {t('predictiveIntelligence', lang)}
               </h2>
               <div className="space-y-3">
                 {predictions.map(p => {
@@ -334,7 +334,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
         {/* ── 📚 Financial Education — Roadmap Feature 6 ── */}
         <div>
           <h2 className="text-base font-bold mb-3 text-gray-900">
-            {lang === 'sw' ? '📚 Elimu ya Fedha' : '📚 Financial Education'}
+            {t('financialEducation', lang)}
           </h2>
           <FinancialEducation />
         </div>
@@ -348,7 +348,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
         {pieData.length > 0 && (
           <div>
             <h2 className="text-base font-bold mb-3 text-gray-900">
-              {lang === 'sw' ? 'Mgawanyo wa Jamii' : 'Category Breakdown'}
+              {t('categoryBreakdown', lang)}
             </h2>
             <div className="bg-white rounded-2xl p-4 shadow-md">
               <ResponsiveContainer width="100%" height={220}>
@@ -385,7 +385,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
         {/* ── Budget Suggestions ── */}
         <div>
           <h2 className="text-base font-bold mb-3 text-gray-900">
-            {lang === 'sw' ? '🤖 Mapendekezo ya Bajeti' : '🤖 Budget Suggestions'}
+            {t('budgetSuggestions', lang)}
           </h2>
           <SmartBudgetBuilder />
         </div>
@@ -394,18 +394,18 @@ export function InsightsView({ onBack }: InsightsViewProps) {
         {state.transactions.length > 0 && (
           <div>
             <h2 className="text-base font-bold mb-3 text-gray-900">
-              {lang === 'sw' ? 'Muhtasari' : 'Summary'}
+              {t('summary', lang)}
             </h2>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white rounded-2xl p-4 shadow-md">
                 <p className="text-xs text-gray-500 mb-1">
-                  {lang === 'sw' ? 'Jumla ya Miamala' : 'Total Transactions'}
+                  {t('totalTransactions', lang)}
                 </p>
                 <p className="text-xl font-bold text-gray-900">{state.transactions.length}</p>
               </div>
               <div className="bg-white rounded-2xl p-4 shadow-md">
                 <p className="text-xs text-gray-500 mb-1">
-                  {lang === 'sw' ? 'Wastani wa Siku' : 'Daily Average'}
+                  {t('dailyAverage', lang)}
                 </p>
                 <p className="text-xl font-bold text-gray-900">{formatCurrency(Math.round(avgDailyExpense))}</p>
               </div>

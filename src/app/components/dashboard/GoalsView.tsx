@@ -48,7 +48,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
     setNewGoalTarget('');
     setNewGoalDeadlineDays('');
     setShowAddGoal(false);
-    toast.success(lang === 'sw' ? '🎯 Lengo limeongezwa!' : '🎯 Goal added!');
+    toast.success(t('goalAdded', lang));
   };
 
   const handleContribute = () => {
@@ -66,7 +66,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
 
     setContributionAmount('');
     setShowContribute(null);
-    toast.success(lang === 'sw' ? '✅ Mchango umeongezwa!' : '✅ Contribution added!');
+    toast.success(t('contributionAdded', lang));
   };
 
   const getDailyRequired = (goal: typeof state.goals[0]) => {
@@ -95,17 +95,17 @@ export function GoalsView({ onBack }: GoalsViewProps) {
             <h1 className="text-2xl font-bold">{t('goals', lang)}</h1>
           </div>
           <span className="text-white/70 text-sm">
-            {state.goals.filter(g => !g.completed).length} {lang === 'sw' ? 'hai' : 'active'}
+            {state.goals.filter(g => !g.completed).length} {t('active', lang)}
           </span>
         </div>
         {/* Summary */}
         {state.goals.length > 0 && (
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: lang === 'sw' ? 'Malengo' : 'Goals', value: state.goals.length },
-              { label: lang === 'sw' ? 'Imekamilika' : 'Done', value: state.goals.filter(g => g.completed).length },
+              { label: t('goals', lang), value: state.goals.length },
+              { label: t('done', lang), value: state.goals.filter(g => g.completed).length },
               {
-                label: lang === 'sw' ? 'Jumla' : 'Total Saved',
+                label: t('savedLabel', lang),
                 value: fmtShort(state.goals.reduce((s, g) => s + g.current, 0)),
               },
             ].map(({ label, value }) => (
@@ -189,7 +189,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
                   </div>
                 )}
                 {goal.completed && (
-                  <span className="text-xs text-emerald-600 font-semibold">✅ {lang === 'sw' ? 'Imekamilika!' : 'Completed!'}</span>
+                  <span className="text-xs text-emerald-600 font-semibold">✅ {t('completed', lang)}</span>
                 )}
               </div>
 
@@ -217,7 +217,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
           <Plus className="w-8 h-8 text-purple-400 mb-2" />
           <p className="text-gray-600 font-semibold">{t('addGoal', lang)}</p>
           <p className="text-xs text-gray-400 mt-1">
-            {lang === 'sw' ? 'Weka lengo na muda wake' : 'Set a goal with a deadline'}
+            {t('setGoalDeadline', lang)}
           </p>
         </motion.button>
       </div>
@@ -245,7 +245,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1.5">
-                    {lang === 'sw' ? 'Jina la Lengo' : 'Goal Name'}
+                    {t('goalName', lang)}
                   </label>
                   <input
                     placeholder={lang === 'sw' ? 'Mf: Simu mpya, Ada ya shule...' : 'e.g. New phone, School fees...'}
@@ -257,7 +257,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
 
                 <div>
                   <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1.5">
-                    {lang === 'sw' ? 'Kiasi Lengwa' : 'Target Amount'}
+                    {t('targetAmountLabel', lang)}
                   </label>
                   <input
                     type="number"
@@ -287,7 +287,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
                 <div>
                   <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1.5">
                     <Calendar className="w-3 h-3 inline mr-1" />
-                    {lang === 'sw' ? 'Muda (Siku) — Hiari' : 'Deadline (Days) — Optional'}
+                    {t('deadlineDaysOptional', lang)}
                   </label>
                   <input
                     type="number"
@@ -359,7 +359,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
                 </h2>
                 <p className="text-xs text-gray-500 mb-1">{goal.title}</p>
                 <p className="text-xs text-purple-600 font-medium mb-4">
-                  {lang === 'sw' ? `Imebaki: ${fmt(remaining)}` : `Remaining: ${fmt(remaining)}`}
+                  {t('goalRemaining', lang)}: {fmt(remaining)}
                 </p>
 
                 <div className="flex items-center border-2 border-purple-500 rounded-2xl mb-4 overflow-hidden">
@@ -425,7 +425,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
             <div className="bg-white rounded-3xl p-8 text-center shadow-2xl">
               <div className="text-6xl mb-4">🎉</div>
               <h2 className="text-2xl font-black text-gray-900 mb-2">
-                {lang === 'sw' ? 'Hongera!' : 'Congratulations!'}
+                {t('congratulations', lang)}
               </h2>
               <p className="text-sm text-gray-600">
                 {lang === 'sw'

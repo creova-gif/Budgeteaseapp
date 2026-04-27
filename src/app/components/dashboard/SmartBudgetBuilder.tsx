@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Wand2, CheckCircle, TrendingDown, ChevronDown, ChevronUp, Info } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { t } from '@/app/utils/translations';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
 import { toast } from 'sonner';
 
@@ -66,7 +67,7 @@ export function SmartBudgetBuilder() {
           </div>
           <div className="text-left">
             <p className="text-sm font-bold text-gray-900">
-              {lang === 'sw' ? 'Muundaji wa Bajeti' : 'Smart Budget Builder'}
+              {t('smartBudgetBuilder', lang)}
             </p>
             <p className="text-xs text-gray-400">
               {hasData
@@ -132,7 +133,7 @@ export function SmartBudgetBuilder() {
                           <p className="text-xs font-bold text-gray-900">{s.cat}</p>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-xs text-gray-400">
-                              {lang === 'sw' ? 'Wastani:' : 'Avg:'} {fmt(s.total)}
+                              {t('avg', lang)} {fmt(s.total)}
                             </span>
                             {saving > 0 && (
                               <span className="text-xs text-emerald-600 font-medium flex items-center gap-0.5">

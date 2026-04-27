@@ -93,13 +93,13 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         const text = evt.target?.result as string;
         const parsed = JSON.parse(text);
         if (typeof parsed !== 'object' || !Array.isArray(parsed.transactions)) {
-          setImportError(lang === 'sw' ? 'Faili batili — si faili la PesaPlan' : 'Invalid file — not a PesaPlan backup');
+          setImportError(t('invalidBackupFile', lang));
           return;
         }
         setPendingImport(text);
         setShowImportConfirm(true);
       } catch {
-        setImportError(lang === 'sw' ? 'Faili batili — JSON isiyo sahihi' : 'Invalid file — could not parse JSON');
+        setImportError(t('invalidJSONFile', lang));
       }
     };
     reader.readAsText(file);
@@ -122,7 +122,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
     },
     {
       icon: DollarSign,
-      label: lang === 'sw' ? 'Nchi / Sarafu' : 'Country / Currency',
+      label: t('countryCurrency', lang),
       value: `${REGION_CONFIG[state.region].flag} ${REGION_CONFIG[state.region].currency}`,
       action: () => {
         const order = ['TZ', 'KE', 'UG', 'RW', 'BI'] as const;
@@ -141,13 +141,13 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             monthly:   lang === 'sw' ? 'Kila Mwezi'  : 'Monthly',
             irregular: lang === 'sw' ? 'Isiyo ya Kawaida' : 'Irregular',
           }[state.incomeFrequency]
-        : (lang === 'sw' ? 'Haijawekwa' : 'Not set'),
+        : t('notSet', lang),
       action: () => {},
       badge: null,
     },
     {
       icon: Shield,
-      label: lang === 'sw' ? 'Kisheria & Faragha' : 'Legal & Privacy',
+      label: t('legal', lang),
       value: lang === 'sw' ? 'Sera · Masharti' : 'Policy · Terms',
       action: () => setShowLegal(true),
       badge: null,
@@ -156,15 +156,15 @@ export function SettingsView({ onBack }: SettingsViewProps) {
 
   const profileData = [
     {
-      label: lang === 'sw' ? 'Jumla ya Miamala' : 'Total Transactions',
+      label: t('totalTransactions', lang),
       value: state.transactions.length.toString(),
     },
     {
-      label: lang === 'sw' ? 'Malengo' : 'Goals',
+      label: t('goals', lang),
       value: state.goals.length.toString(),
     },
     {
-      label: lang === 'sw' ? 'Siku Mfululizo' : 'Day Streak',
+      label: t('dayStreak', lang),
       value: `🔥 ${state.streak}`,
     },
   ];
@@ -185,7 +185,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {/* Name input */}
         <div className="bg-white rounded-2xl shadow-sm p-4">
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">
-            {lang === 'sw' ? 'Jina Lako' : 'Your Name'}
+            {t('yourName', lang)}
           </label>
           <div className="flex gap-2">
             <input
@@ -201,7 +201,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               disabled={nameInput.trim() === state.userName}
               className="px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-semibold disabled:opacity-40 hover:bg-emerald-600 transition"
             >
-              {lang === 'sw' ? 'Hifadhi' : 'Save'}
+              {t('save', lang)}
             </button>
           </div>
         </div>
@@ -209,7 +209,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {/* Profile Stats */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            {lang === 'sw' ? 'Takwimu Zangu' : 'My Stats'}
+            {t('myStats', lang)}
           </h2>
           <div className="grid grid-cols-3 gap-3">
             {profileData.map(({ label, value }) => (
@@ -224,7 +224,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {/* General Settings */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            {lang === 'sw' ? 'Mipangilio' : 'General'}
+            {t('settings', lang)}
           </h2>
           <div className="bg-white rounded-2xl shadow-md overflow-hidden">
             {settingsItems.map((item, index) => (
@@ -266,7 +266,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {/* Actions */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            {lang === 'sw' ? 'Vitendo' : 'Actions'}
+            {t('actions', lang)}
           </h2>
           <div className="space-y-3">
             {/* Export CSV */}
@@ -287,12 +287,12 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               <div className="text-left">
                 <span className="font-medium text-gray-900 block text-sm">
                   {exportDone
-                    ? (lang === 'sw' ? 'Imepakuliwa!' : 'Downloaded!')
+                    ? t('downloaded', lang)
                     : t('exportHistory', lang)}
                 </span>
                 <span className="text-xs text-gray-500">
                   {state.transactions.length === 0
-                    ? (lang === 'sw' ? 'Hakuna data ya kuhamisha' : 'No data to export')
+                    ? t('noDataToExport', lang)
                     : (lang === 'sw'
                         ? `${state.transactions.length} miamala → CSV`
                         : `${state.transactions.length} transactions → CSV`)}
@@ -311,10 +311,10 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </div>
               <div className="text-left">
                 <span className="font-medium text-gray-900 block text-sm">
-                  {lang === 'sw' ? 'Hifadhi Nakala (JSON)' : 'Save Backup (JSON)'}
+                  {t('saveBackupJSON', lang)}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {lang === 'sw' ? 'Hifadhi data yote kwa usalama' : 'Full data backup you can restore later'}
+                  {t('fullDataBackup', lang)}
                 </span>
               </div>
             </motion.button>
@@ -329,12 +329,10 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </div>
               <div className="text-left">
                 <span className="font-medium text-gray-900 block text-sm">
-                  {importDone
-                    ? (lang === 'sw' ? 'Imerejesha!' : 'Restored!')
-                    : (lang === 'sw' ? 'Rejesha Nakala (JSON)' : 'Restore Backup (JSON)')}
+                  {importDone ? t('restoredDone', lang) : t('restoreBackupJSON', lang)}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {lang === 'sw' ? 'Rejesha kutoka faili ya nakala' : 'Restore from a saved backup file'}
+                  {t('restoreFromFile', lang)}
                 </span>
               </div>
               <input type="file" accept=".json,application/json" className="hidden" onChange={handleImportJSON} />
@@ -355,7 +353,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               <div className="text-left">
                 <span className="font-medium text-red-700 block text-sm">{t('deleteData', lang)}</span>
                 <span className="text-xs text-gray-500">
-                  {lang === 'sw' ? 'Futa data zote na anza upya' : 'Erase all data and restart'}
+                  {t('eraseAllData', lang)}
                 </span>
               </div>
             </motion.button>
@@ -365,7 +363,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {/* ── Security (App Lock) ── */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            🔒 {lang === 'sw' ? 'Usalama' : 'Security'}
+            🔒 {t('security', lang)}
           </h2>
           <div className="bg-white rounded-2xl shadow-md overflow-hidden">
             {/* App Lock toggle */}
@@ -390,12 +388,12 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                 </div>
                 <div className="text-left">
                   <p className="font-medium text-gray-900 text-sm">
-                    {lang === 'sw' ? 'Kufunga kwa PIN' : 'App PIN Lock'}
+                    {t('appLock', lang)}
                   </p>
                   <p className="text-xs text-gray-400">
                     {state.appLockEnabled
-                      ? (lang === 'sw' ? 'Imewezeshwa — gusa kubadilisha' : 'Enabled — tap to change')
-                      : (lang === 'sw' ? 'Ongeza PIN ya usalama' : 'Add a security PIN')
+                      ? t('enabledTapToChange', lang)
+                      : t('secureApp', lang)
                     }
                   </p>
                 </div>
@@ -418,7 +416,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             onClick={() => setShowLegal(true)}
             className="mt-2 text-xs text-gray-400 underline underline-offset-2"
           >
-            {lang === 'sw' ? 'Sera ya Faragha · Masharti ya Huduma' : 'Privacy Policy · Terms of Service'}
+            {t('privacyPolicy', lang)} · {t('termsOfService', lang)}
           </button>
         </div>
       </div>
@@ -451,7 +449,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                 <AlertTriangle className="w-7 h-7 text-red-600" />
               </div>
               <h2 className="text-xl font-bold text-center text-gray-900 mb-2">
-                {lang === 'sw' ? 'Futa Data Zote?' : 'Delete All Data?'}
+                {t('deleteAllDataTitle', lang)}
               </h2>
               <p className="text-sm text-gray-600 text-center mb-6">
                 {lang === 'sw'
@@ -469,7 +467,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                   onClick={handleDeleteData}
                   className="flex-1 py-3 rounded-2xl bg-red-600 text-white font-semibold"
                 >
-                  {lang === 'sw' ? 'Ndio, Futa' : 'Yes, Delete'}
+                  {t('yesDelete', lang)}
                 </button>
               </div>
             </motion.div>
@@ -499,7 +497,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                 <Upload className="w-7 h-7 text-purple-600" />
               </div>
               <h2 className="text-xl font-bold text-center text-gray-900 mb-2">
-                {lang === 'sw' ? 'Rejesha Nakala?' : 'Restore Backup?'}
+                {t('restoreBackupTitle', lang)}
               </h2>
               <p className="text-sm text-gray-600 text-center mb-6">
                 {lang === 'sw'
@@ -511,7 +509,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                   {t('cancel', lang)}
                 </button>
                 <button onClick={confirmImport} className="flex-1 py-3 rounded-2xl bg-purple-600 text-white font-semibold">
-                  {lang === 'sw' ? 'Ndio, Rejesha' : 'Yes, Restore'}
+                  {t('yesRestore', lang)}
                 </button>
               </div>
             </motion.div>
@@ -558,7 +556,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                 <Unlock className="w-7 h-7 text-amber-600" />
               </div>
               <h2 className="text-xl font-bold text-center text-gray-900 mb-2">
-                {lang === 'sw' ? 'Zima Kufunga?' : 'Disable PIN Lock?'}
+                {t('disablePinLock', lang)}
               </h2>
               <p className="text-sm text-gray-600 text-center mb-6">
                 {lang === 'sw'
@@ -580,7 +578,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                   }}
                   className="flex-1 py-3 rounded-2xl bg-amber-500 text-white font-semibold"
                 >
-                  {lang === 'sw' ? 'Zima' : 'Disable'}
+                  {t('disable', lang)}
                 </button>
               </div>
             </motion.div>
