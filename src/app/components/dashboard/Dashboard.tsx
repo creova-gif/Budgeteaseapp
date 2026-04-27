@@ -275,10 +275,14 @@ export function Dashboard() {
   };
 
   // ── Arc math for monthly progress ────────────────────────────────────────
-  const arcR = 54;
+  const arcR = 52;
   const arcCirc = 2 * Math.PI * arcR;
-  const arcDash = (monthlyStats.pct / 100) * arcCirc * 0.75;
+  const arcPct = Math.min(monthlyStats.pct, 100);
+  const arcDash = (arcPct / 100) * arcCirc * 0.75;
   const arcGap = arcCirc - arcDash;
+  const monthSaved = Math.max(0, monthlyStats.income - monthlyStats.expenses);
+  const arcColor = monthlyStats.pct >= 100 ? '#ef4444' : monthlyStats.pct >= 80 ? '#f97316' : monthlyStats.pct >= 60 ? '#eab308' : '#10b981';
+  const hasMonthlyData = monthlyStats.income > 0 || monthlyStats.expenses > 0;
 
   return (
     <div className="flex flex-col h-screen bg-emerald-50 overflow-hidden">
@@ -459,117 +463,162 @@ export function Dashboard() {
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
                   className="bg-white rounded-3xl shadow-md overflow-hidden"
                 >
-                  <div className="px-5 pt-5 pb-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <p className="text-xs text-gray-400 uppercase tracking-wider">
-                          {lang === 'sw' ? 'Muhtasari wa Mwezi' : 'Monthly Summary'}
-                        </p>
-                        <p className="font-black text-gray-900" style={{ fontSize: '1rem' }}>
-                          {lang === 'sw' ? 'Matumizi dhidi ya Mapato' : 'Spending vs Income'}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => setShowBudgetLimits(true)}
-                        className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-3 py-1.5 rounded-full"
-                      >
-                        {lang === 'sw' ? 'Mipaka' : 'Limits'}
-                      </button>
+                  {/* Tinted header strip */}
+                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-5 pt-4 pb-3 flex items-center justify-between border-b border-emerald-100/60">
+                    <div>
+                      <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-0.5">
+                        {lang === 'sw' ? 'Muhtasari wa Mwezi' : 'Monthly Summary'}
+                      </p>
+                      <p className="font-black text-gray-900 text-[0.95rem] leading-tight">
+                        {lang === 'sw' ? 'Matumizi dhidi ya Mapato' : 'Spending vs Income'}
+                      </p>
                     </div>
+                    <button
+                      onClick={() => setShowBudgetLimits(true)}
+                      className="flex items-center gap-1.5 text-xs text-emerald-700 font-bold bg-white border border-emerald-200 shadow-sm px-3 py-1.5 rounded-full hover:bg-emerald-50 transition"
+                    >
+                      <AlertTriangle className="w-3 h-3" />
+                      {lang === 'sw' ? 'Mipaka' : 'Limits'}
+                    </button>
+                  </div>
 
-                    <div className="flex items-center gap-6">
-                      {/* SVG Arc */}
-                      <div className="relative shrink-0" style={{ width: 132, height: 132 }}>
-                        <svg width="132" height="132" viewBox="0 0 132 132">
-                          {/* Track */}
-                          <circle cx="66" cy="66" r={arcR} fill="none" stroke="#f0fdf4" strokeWidth="11"
-                            strokeDasharray={`${arcCirc * 0.75} ${arcCirc * 0.25}`}
-                            strokeDashoffset={arcCirc * 0.125}
-                            strokeLinecap="round"
-                          />
-                          {/* Fill */}
-                          <motion.circle
-                            cx="66" cy="66" r={arcR} fill="none"
-                            stroke={monthlyStats.pct >= 90 ? '#ef4444' : monthlyStats.pct >= 75 ? '#f97316' : '#10b981'}
-                            strokeWidth="11"
-                            strokeDasharray={`${arcDash} ${arcGap + arcCirc * 0.25}`}
-                            strokeDashoffset={arcCirc * 0.125}
-                            strokeLinecap="round"
-                            initial={{ strokeDasharray: `0 ${arcCirc}` }}
-                            animate={{ strokeDasharray: `${arcDash} ${arcGap + arcCirc * 0.25}` }}
-                            transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 }}
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <p className={`font-black tabular-nums ${monthlyStats.pct >= 90 ? 'text-red-500' : monthlyStats.pct >= 75 ? 'text-orange-500' : 'text-emerald-600'}`}
-                            style={{ fontSize: '1.4rem' }}>
-                            {Math.round(monthlyStats.pct)}%
-                          </p>
-                          <p className="text-gray-400" style={{ fontSize: '0.65rem' }}>
-                            {lang === 'sw' ? 'Imetumika' : 'used'}
-                          </p>
+                  {/* Main body */}
+                  <div className="px-5 pt-4 pb-3">
+                    {!hasMonthlyData ? (
+                      /* ── Empty state ── */
+                      <div className="flex flex-col items-center py-4 gap-2 text-center">
+                        <div className="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center mb-1">
+                          <TrendingUp className="w-7 h-7 text-emerald-400" />
                         </div>
+                        <p className="text-sm font-bold text-gray-700">
+                          {lang === 'sw' ? 'Anza kurekodi leo' : 'Start logging today'}
+                        </p>
+                        <p className="text-xs text-gray-400 max-w-[200px]">
+                          {lang === 'sw'
+                            ? 'Ongeza mapato au matumizi ili kuona muhtasari wako wa mwezi.'
+                            : 'Add income or expenses to see your monthly summary here.'}
+                        </p>
                       </div>
-
-                      {/* Stats */}
-                      <div className="flex-1 space-y-3">
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-gray-400">{lang === 'sw' ? 'Imetumika' : 'Spent'}</span>
-                            <span className="font-semibold text-gray-700">{fmtK(monthlyStats.expenses)}</span>
-                          </div>
-                          <div className="h-2 bg-emerald-50 rounded-full overflow-hidden">
-                            <motion.div
-                              className={`h-full rounded-full ${monthlyStats.pct >= 90 ? 'bg-red-500' : monthlyStats.pct >= 75 ? 'bg-orange-400' : 'bg-emerald-500'}`}
-                              initial={{ width: 0 }}
-                              animate={{ width: `${monthlyStats.pct}%` }}
-                              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+                    ) : (
+                      <div className="flex items-center gap-5">
+                        {/* SVG Arc */}
+                        <div className="relative shrink-0" style={{ width: 120, height: 120 }}>
+                          <svg width="120" height="120" viewBox="0 0 120 120">
+                            {/* Shadow circle for depth */}
+                            <circle cx="60" cy="60" r={arcR} fill="none" stroke="#f1f5f9" strokeWidth="13"
+                              strokeDasharray={`${arcCirc * 0.75} ${arcCirc * 0.25}`}
+                              strokeDashoffset={arcCirc * 0.125}
+                              strokeLinecap="round"
                             />
+                            {/* Track */}
+                            <circle cx="60" cy="60" r={arcR} fill="none" stroke="#e5e7eb" strokeWidth="10"
+                              strokeDasharray={`${arcCirc * 0.75} ${arcCirc * 0.25}`}
+                              strokeDashoffset={arcCirc * 0.125}
+                              strokeLinecap="round"
+                            />
+                            {/* Fill */}
+                            <motion.circle
+                              cx="60" cy="60" r={arcR} fill="none"
+                              stroke={arcColor}
+                              strokeWidth="10"
+                              strokeDasharray={`${arcDash} ${arcGap + arcCirc * 0.25}`}
+                              strokeDashoffset={arcCirc * 0.125}
+                              strokeLinecap="round"
+                              initial={{ strokeDasharray: `0 ${arcCirc}` }}
+                              animate={{ strokeDasharray: `${arcDash} ${arcGap + arcCirc * 0.25}` }}
+                              transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 }}
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+                            <p className="font-black tabular-nums text-[1.5rem] leading-none" style={{ color: arcColor }}>
+                              {Math.round(arcPct)}%
+                            </p>
+                            <p className="text-[0.6rem] text-gray-400 font-medium">
+                              {lang === 'sw' ? 'imetumika' : 'used'}
+                            </p>
+                            {monthSaved > 0 && (
+                              <p className="text-[0.6rem] font-bold text-emerald-600 bg-emerald-50 rounded-full px-2 py-0.5 mt-0.5">
+                                +{fmtK(monthSaved)}
+                              </p>
+                            )}
                           </div>
                         </div>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-gray-400">{lang === 'sw' ? 'Mapato' : 'Income'}</span>
-                          <span className="font-semibold text-emerald-600">+{fmtK(monthlyStats.income)}</span>
-                        </div>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-gray-400">{lang === 'sw' ? 'Imebaki' : 'Left'}</span>
-                          <span className={`font-semibold ${monthlyStats.income - monthlyStats.expenses >= 0 ? 'text-teal-600' : 'text-red-500'}`}>
-                            {fmtK(Math.abs(monthlyStats.income - monthlyStats.expenses))}
-                          </span>
-                        </div>
-                        <div className={`rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 ${
-                          monthlyStats.onTrack ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
-                        }`}>
-                          {monthlyStats.onTrack ? '✅' : '⚠️'}
-                          {monthlyStats.onTrack
-                            ? (lang === 'sw' ? 'Uko kwenye njia nzuri' : 'On track this month')
-                            : (lang === 'sw' ? 'Kasi ya matumizi ni nyingi' : 'Spending above pace')}
+
+                        {/* Stats column */}
+                        <div className="flex-1 space-y-2">
+                          {/* Spent row with bar */}
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Imetumika' : 'Spent'}</span>
+                              <span className="text-[13px] font-bold text-gray-800">{fmtK(monthlyStats.expenses)}</span>
+                            </div>
+                            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: arcColor }}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${Math.min(arcPct, 100)}%` }}
+                                transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+                              />
+                            </div>
+                          </div>
+                          {/* Income */}
+                          <div className="flex justify-between items-center">
+                            <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Mapato' : 'Income'}</span>
+                            <span className="text-[13px] font-bold text-emerald-600">+{fmtK(monthlyStats.income)}</span>
+                          </div>
+                          {/* Left */}
+                          <div className="flex justify-between items-center">
+                            <span className="text-[11px] text-gray-400 font-medium">{lang === 'sw' ? 'Imebaki' : 'Left'}</span>
+                            <span className={`text-[13px] font-bold ${monthlyStats.income - monthlyStats.expenses >= 0 ? 'text-teal-600' : 'text-red-500'}`}>
+                              {monthlyStats.income - monthlyStats.expenses >= 0 ? '' : '-'}{fmtK(Math.abs(monthlyStats.income - monthlyStats.expenses))}
+                            </span>
+                          </div>
+                          {/* Status badge */}
+                          <div className={`rounded-xl px-2.5 py-1.5 text-[11px] font-semibold flex items-center gap-1.5 ${
+                            monthlyStats.onTrack
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                              : 'bg-red-50 text-red-600 border border-red-100'
+                          }`}>
+                            <span>{monthlyStats.onTrack ? '✅' : '⚠️'}</span>
+                            <span>
+                              {monthlyStats.onTrack
+                                ? (lang === 'sw' ? 'Uko kwenye njia nzuri' : 'On track this month')
+                                : (lang === 'sw' ? 'Matumizi ni makubwa' : 'Spending above pace')}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* 7-day sparkline */}
-                  <div className="px-5 pb-4">
-                    <p className="text-xs text-gray-400 mb-2">{lang === 'sw' ? 'Mwenendo wa siku 7' : '7-day spending trend'}</p>
-                    <ResponsiveContainer width="100%" height={56}>
-                      <AreaChart data={trendData} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.18} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <XAxis dataKey="day" tick={{ fontSize: 9, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                        <YAxis hide />
-                        <Tooltip
-                          contentStyle={{ fontSize: 11, borderRadius: 10, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                          formatter={(v: number) => [fmtK(v), lang === 'sw' ? 'Imetumika' : 'Spent']}
-                        />
-                        <Area type="monotone" dataKey="spent" stroke="#10b981" strokeWidth={2} fill="url(#trendGrad)" dot={{ r: 3, fill: '#10b981' }} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
+                  {hasMonthlyData && (
+                    <div className="px-5 pb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">
+                          {lang === 'sw' ? 'Mwenendo wa siku 7' : '7-day trend'}
+                        </p>
+                      </div>
+                      <ResponsiveContainer width="100%" height={52}>
+                        <AreaChart data={trendData} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="day" tick={{ fontSize: 9, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                          <YAxis hide />
+                          <Tooltip
+                            contentStyle={{ fontSize: 11, borderRadius: 10, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.1)', padding: '6px 10px' }}
+                            formatter={(v: number) => [fmtK(v), lang === 'sw' ? 'Imetumika' : 'Spent']}
+                          />
+                          <Area type="monotone" dataKey="spent" stroke="#10b981" strokeWidth={2} fill="url(#trendGrad)" dot={{ r: 2.5, fill: '#10b981', strokeWidth: 0 }} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                 </motion.div>
 
                 {/* ── BUDGET ALERTS ── */}
