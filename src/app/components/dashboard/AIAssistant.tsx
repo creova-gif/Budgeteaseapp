@@ -23,19 +23,25 @@ function generateReply(
   const expenses = state.transactions.filter(t => t.type === 'expense');
   const income = state.transactions.filter(t => t.type === 'income');
 
-  const byCategory: Record<string, number> = {};
-  expenses.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
-  const topCat = Object.entries(byCategory).sort(([, a], [, b]) => b - a);
-
   const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay()); weekStart.setHours(0, 0, 0, 0);
   const thisWeekExp = expenses.filter(t => t.date >= weekStart).reduce((s, t) => s + t.amount, 0);
   const thisWeekInc = income.filter(t => t.date >= weekStart).reduce((s, t) => s + t.amount, 0);
 
+  const byCategory: Record<string, number> = {};
+  expenses.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
+  const topCat = Object.entries(byCategory).sort(([, a], [, b]) => b - a);
+
+  const thisWeekByCategory: Record<string, number> = {};
+  expenses.filter(t => t.date >= weekStart).forEach(t => {
+    thisWeekByCategory[t.category] = (thisWeekByCategory[t.category] || 0) + t.amount;
+  });
+
   const todayExp = expenses.filter(t => t.date.toDateString() === now.toDateString()).reduce((s, t) => s + t.amount, 0);
   const totalBalance = state.cashBalance + state.mobileMoneyBalance + state.bankBalance;
 
-  // ── Pattern matching ─────────────────────────────────────────────────
-  const matches = (keywords: string[]) => keywords.some(k => lower.includes(k));
+  // ── Pattern matching — word boundaries prevent false partial matches ────
+  const matches = (keywords: string[]) =>
+    keywords.some(k => new RegExp(`(^|\\s)${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$)`, 'i').test(lower) || lower.includes(k));
 
   // Balance / how much
   if (matches(['balance', 'bakaa', 'baki', 'how much do i have', 'nina kiasi'])) {
@@ -97,15 +103,16 @@ function generateReply(
       : `Goal "${g.title}": ${pct}% complete. ${fmt(remaining)} remaining.`;
   }
 
-  // Food / specific categories
+  // Specific category queries — show this-week and all-time amounts
   for (const [cat, amt] of topCat) {
     const catLower = cat.toLowerCase();
     if (lower.includes(catLower) || lower.includes(catLower.replace('&', 'and'))) {
       const budget = state.categoryBudgets[cat];
-      const budgetInfo = budget ? (lang === 'sw' ? ` (Bajeti: ${fmt(budget)})` : ` (Budget: ${fmt(budget)})`) : '';
+      const weekAmt = thisWeekByCategory[cat] || 0;
+      const budgetInfo = budget ? (lang === 'sw' ? ` Bajeti: ${fmt(budget)}.` : ` Budget: ${fmt(budget)}.`) : '';
       return lang === 'sw'
-        ? `${getCategoryIcon(cat)} ${cat}: umetumia ${fmt(amt)} jumla.${budgetInfo}`
-        : `${getCategoryIcon(cat)} ${cat}: you've spent ${fmt(amt)} total.${budgetInfo}`;
+        ? `${getCategoryIcon(cat)} ${cat}: Wiki hii ${fmt(weekAmt)}, jumla yote ${fmt(amt)}.${budgetInfo}`
+        : `${getCategoryIcon(cat)} ${cat}: ${fmt(weekAmt)} this week, ${fmt(amt)} all-time.${budgetInfo}`;
     }
   }
 
@@ -173,8 +180,8 @@ export function AIAssistant() {
   const initMessages = (): Message[] => [{
     role: 'assistant',
     text: lang === 'sw'
-      ? `Habari! Mimi ni msaidizi wako wa fedha wa PesaPlan. 🤖\nNiulize chochote kuhusu matumizi yako!`
-      : `Hello! I'm your PesaPlan budget assistant. 🤖\nAsk me anything about your spending!`,
+      ? `Habari! Mimi ni Msaidizi wako wa Bajeti. 💬\nNiulize chochote kuhusu matumizi yako!`
+      : `Hello! I'm your Budget Coach. 💬\nAsk me anything about your spending!`,
   }];
 
   useEffect(() => {
@@ -382,19 +389,12 @@ export function AIAssistant() {
 
                   {/* Text info */}
                   <div>
-                    <p className="font-bold text-sm tracking-wide">PesaPlan AI</p>
+                    <p className="font-bold text-sm tracking-wide">
+                      {lang === 'sw' ? 'Msaidizi wa Bajeti' : 'Budget Coach'}
+                    </p>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      {/* Pulsing live status dot */}
-                      <span className="relative flex h-2 w-2">
-                        <motion.span
-                          animate={{ scale: [1, 1.8, 1], opacity: [0.7, 0, 0.7] }}
-                          transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-                          className="absolute inline-flex h-full w-full rounded-full bg-emerald-200"
-                        />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-green-300" />
-                      </span>
                       <p className="text-xs text-white/75">
-                        {lang === 'sw' ? 'Mshauri wa Fedha · Mtandaoni' : 'Financial Assistant · Online'}
+                        {lang === 'sw' ? 'Maswali kuhusu fedha zako' : 'Ask about your spending'}
                       </p>
                     </div>
                   </div>

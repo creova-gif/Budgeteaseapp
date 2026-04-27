@@ -73,7 +73,7 @@ export const REGION_CONFIG: Record<Region, RegionConfig> = {
     goalDefaults: { schoolFees: 200000, bills: 80000, emergencyFund: 120000, data: 20000, travel: 400000 },
   },
   BI: {
-    locale: 'fr-BI', currency: 'BIF', symbol: 'Fr', flag: '🇧🇮',
+    locale: 'sw-BI', currency: 'BIF', symbol: 'Fr', flag: '🇧🇮',
     nameEn: 'Burundi', nameSw: 'Burundi',
     dailyWarnThreshold: 50000,
     maxTransactionAmount: 999_999_999,

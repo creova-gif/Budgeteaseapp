@@ -6,6 +6,7 @@ import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
 import { SpendingHeatmap } from './SpendingHeatmap';
 import { FinancialEducation } from './FinancialEducation';
 import { SavingsChallenge } from './SavingsChallenge';
+import { SmartBudgetBuilder } from './SmartBudgetBuilder';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell,
@@ -380,6 +381,14 @@ export function InsightsView({ onBack }: InsightsViewProps) {
             </div>
           </div>
         )}
+
+        {/* ── Budget Suggestions ── */}
+        <div>
+          <h2 className="text-base font-bold mb-3 text-gray-900">
+            {lang === 'sw' ? '🤖 Mapendekezo ya Bajeti' : '🤖 Budget Suggestions'}
+          </h2>
+          <SmartBudgetBuilder />
+        </div>
 
         {/* Summary Stats */}
         {state.transactions.length > 0 && (

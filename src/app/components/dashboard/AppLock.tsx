@@ -186,7 +186,18 @@ export function AppLock({ mode, storedPin = '', onUnlocked, onPinSet, onCancel }
         >
           {title}
         </motion.h1>
-        <p className="text-white/40 text-sm text-center mb-10">{subtitle}</p>
+        <p className="text-white/40 text-sm text-center mb-3">{subtitle}</p>
+
+        {/* PIN recovery warning — shown only during setup */}
+        {isSetup && setupStep === 'enter' && (
+          <p className="text-amber-400/70 text-xs text-center px-8 mb-7">
+            {lang === 'sw'
+              ? '⚠️ Ukisahau PIN yako, itabidi ufute data yote ya programu.'
+              : '⚠️ If you forget your PIN, you will need to clear all app data.'}
+          </p>
+        )}
+        {!isSetup && <div className="mb-10" />}
+        {isSetup && setupStep !== 'enter' && <div className="mb-10" />}
 
         {/* Dot indicators */}
         <motion.div

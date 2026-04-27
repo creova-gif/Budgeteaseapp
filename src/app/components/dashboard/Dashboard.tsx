@@ -241,7 +241,7 @@ export function Dashboard() {
     if (incomeTx.length === 0) return 5000;
     const days = new Set(incomeTx.map(t => t.date.toDateString())).size;
     const total = incomeTx.reduce((s, t) => s + t.amount, 0);
-    return Math.round((total / Math.max(days, 1)) * 0.05 / 500) * 500;
+    return Math.round((total / Math.max(days, 1)) / 500) * 500;
   }, [state.transactions]);
 
   // ── NL-filtered transactions ─────────────────────────────────────────────

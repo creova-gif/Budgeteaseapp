@@ -77,8 +77,8 @@ export function OfflineIndicator() {
                   <p className="text-sm opacity-90">
                     {isOnline
                       ? lang === 'sw'
-                        ? 'Data zimesync kiotomatiki'
-                        : 'Data synced automatically'
+                        ? 'Data zote zimehifadhiwa kwenye kifaa'
+                        : 'All data saved on this device'
                       : lang === 'sw'
                       ? 'Kila kitu kimehifadhiwa kwenye kifaa'
                       : 'Everything saved on device'}

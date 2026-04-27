@@ -56,17 +56,23 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
 
   const isFiltered = filterType !== 'all' || filterSource !== 'all' || filterDateRange !== 'all';
 
-  // Paginate before grouping
-  const paginatedTransactions = filteredTransactions.slice(0, visibleCount);
-
-  const groupedTransactions = paginatedTransactions.reduce((acc, transaction) => {
+  // Group ALL filtered transactions by date first, then limit visible date groups
+  const groupedTransactions = filteredTransactions.reduce((acc, transaction) => {
     const dateKey = format(transaction.date, 'yyyy-MM-dd');
     if (!acc[dateKey]) acc[dateKey] = [];
     acc[dateKey].push(transaction);
     return acc;
   }, {} as Record<string, typeof filteredTransactions>);
 
-  const sortedDates = Object.keys(groupedTransactions).sort((a, b) => b.localeCompare(a));
+  const allSortedDates = Object.keys(groupedTransactions).sort((a, b) => b.localeCompare(a));
+
+  // Include date groups until we've shown visibleCount total items
+  let shownSoFar = 0;
+  const sortedDates = allSortedDates.filter(dateKey => {
+    if (shownSoFar >= visibleCount) return false;
+    shownSoFar += groupedTransactions[dateKey].length;
+    return true;
+  });
 
   const getDateLabel = (dateStr: string) => {
     const date = new Date(dateStr);

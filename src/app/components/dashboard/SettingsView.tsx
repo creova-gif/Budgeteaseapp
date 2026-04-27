@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Globe, DollarSign, Calendar, Download, Trash2, AlertTriangle, X, CheckCircle, Shield, Lock, Unlock } from 'lucide-react';
+import { ArrowLeft, Globe, DollarSign, Calendar, Download, Upload, Trash2, AlertTriangle, X, CheckCircle, Shield, Lock, Unlock } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { REGION_CONFIG } from '@/app/utils/currency';
-import { SmartBudgetBuilder } from './SmartBudgetBuilder';
 import { LegalView } from './LegalView';
 import { AppLockSetup } from './AppLock';
 import { Analytics } from '@/app/utils/analytics';
@@ -22,6 +21,10 @@ export function SettingsView({ onBack }: SettingsViewProps) {
   const [showLockSetup, setShowLockSetup] = useState(false);
   const [showDisableLockConfirm, setShowDisableLockConfirm] = useState(false);
   const [nameInput, setNameInput] = useState(state.userName);
+  const [importDone, setImportDone] = useState(false);
+  const [importError, setImportError] = useState('');
+  const [pendingImport, setPendingImport] = useState<string | null>(null);
+  const [showImportConfirm, setShowImportConfirm] = useState(false);
 
   const handleExportCSV = () => {
     if (state.transactions.length === 0) return;
@@ -62,7 +65,51 @@ export function SettingsView({ onBack }: SettingsViewProps) {
     Analytics.logEvent('data_deleted');
     clearAllData();
     setShowDeleteConfirm(false);
-    // App will re-render showing onboarding since onboardingComplete is reset
+  };
+
+  const handleExportJSON = () => {
+    const raw = localStorage.getItem('pesaplan_v1');
+    if (!raw) return;
+    const blob = new Blob([raw], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pesaplan-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    Analytics.logEvent('data_exported_json');
+  };
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImportError('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const text = evt.target?.result as string;
+        const parsed = JSON.parse(text);
+        if (typeof parsed !== 'object' || !Array.isArray(parsed.transactions)) {
+          setImportError(lang === 'sw' ? 'Faili batili — si faili la PesaPlan' : 'Invalid file — not a PesaPlan backup');
+          return;
+        }
+        setPendingImport(text);
+        setShowImportConfirm(true);
+      } catch {
+        setImportError(lang === 'sw' ? 'Faili batili — JSON isiyo sahihi' : 'Invalid file — could not parse JSON');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const confirmImport = () => {
+    if (!pendingImport) return;
+    localStorage.setItem('pesaplan_v1', pendingImport);
+    Analytics.logEvent('data_imported_json');
+    window.location.reload();
   };
 
   const settingsItems = [
@@ -253,6 +300,49 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </div>
             </motion.button>
 
+            {/* Export JSON Backup */}
+            <motion.button
+              onClick={handleExportJSON}
+              className="w-full bg-white rounded-2xl p-4 shadow-md flex items-center gap-3 hover:shadow-lg transition"
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="bg-blue-100 p-2 rounded-full">
+                <Download className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="text-left">
+                <span className="font-medium text-gray-900 block text-sm">
+                  {lang === 'sw' ? 'Hifadhi Nakala (JSON)' : 'Save Backup (JSON)'}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {lang === 'sw' ? 'Hifadhi data yote kwa usalama' : 'Full data backup you can restore later'}
+                </span>
+              </div>
+            </motion.button>
+
+            {/* Import JSON Backup */}
+            <label className="w-full bg-white rounded-2xl p-4 shadow-md flex items-center gap-3 hover:shadow-lg transition cursor-pointer active:scale-[0.98]">
+              <div className={`p-2 rounded-full ${importDone ? 'bg-emerald-100' : 'bg-purple-100'}`}>
+                {importDone
+                  ? <CheckCircle className="w-5 h-5 text-emerald-600" />
+                  : <Upload className="w-5 h-5 text-purple-600" />
+                }
+              </div>
+              <div className="text-left">
+                <span className="font-medium text-gray-900 block text-sm">
+                  {importDone
+                    ? (lang === 'sw' ? 'Imerejesha!' : 'Restored!')
+                    : (lang === 'sw' ? 'Rejesha Nakala (JSON)' : 'Restore Backup (JSON)')}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {lang === 'sw' ? 'Rejesha kutoka faili ya nakala' : 'Restore from a saved backup file'}
+                </span>
+              </div>
+              <input type="file" accept=".json,application/json" className="hidden" onChange={handleImportJSON} />
+            </label>
+            {importError && (
+              <p className="text-red-500 text-xs px-1">{importError}</p>
+            )}
+
             {/* Delete Data */}
             <motion.button
               onClick={() => setShowDeleteConfirm(true)}
@@ -270,14 +360,6 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </div>
             </motion.button>
           </div>
-        </div>
-
-        {/* ── Smart Budget Builder (Roadmap Feature 4) ── */}
-        <div>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            {lang === 'sw' ? '🤖 Muundaji wa Bajeti' : '🤖 Smart Budget Builder'}
-          </h2>
-          <SmartBudgetBuilder />
         </div>
 
         {/* ── Security (App Lock) ── */}
@@ -388,6 +470,48 @@ export function SettingsView({ onBack }: SettingsViewProps) {
                   className="flex-1 py-3 rounded-2xl bg-red-600 text-white font-semibold"
                 >
                   {lang === 'sw' ? 'Ndio, Futa' : 'Yes, Delete'}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Import Confirm Modal */}
+      <AnimatePresence>
+        {showImportConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-50"
+              onClick={() => setShowImportConfirm(false)}
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="fixed inset-x-6 top-1/2 -translate-y-1/2 bg-white rounded-3xl p-6 z-50 shadow-2xl"
+            >
+              <button onClick={() => setShowImportConfirm(false)} className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full">
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+              <div className="bg-purple-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Upload className="w-7 h-7 text-purple-600" />
+              </div>
+              <h2 className="text-xl font-bold text-center text-gray-900 mb-2">
+                {lang === 'sw' ? 'Rejesha Nakala?' : 'Restore Backup?'}
+              </h2>
+              <p className="text-sm text-gray-600 text-center mb-6">
+                {lang === 'sw'
+                  ? 'Data yako ya sasa itafutwa na kubadilishwa na nakala. Hii haiwezi kutenduliwa.'
+                  : 'Your current data will be replaced with the backup. This cannot be undone.'}
+              </p>
+              <div className="flex gap-3">
+                <button onClick={() => setShowImportConfirm(false)} className="flex-1 py-3 rounded-2xl border-2 border-gray-300 text-gray-700 font-semibold">
+                  {t('cancel', lang)}
+                </button>
+                <button onClick={confirmImport} className="flex-1 py-3 rounded-2xl bg-purple-600 text-white font-semibold">
+                  {lang === 'sw' ? 'Ndio, Rejesha' : 'Yes, Restore'}
                 </button>
               </div>
             </motion.div>
