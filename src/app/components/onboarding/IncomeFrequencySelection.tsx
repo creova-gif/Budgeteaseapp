@@ -83,7 +83,7 @@ export function IncomeFrequencySelection({ onComplete }: IncomeFrequencySelectio
           {t('incomeQuestion', lang)}
         </h2>
         <p className="text-gray-400 text-sm">
-          {lang === 'sw' ? 'Hii inasaidia kutabiri mwenendo wa pesa' : 'This helps us forecast your cash flow'}
+          {t('cashflowHelper', lang)}
         </p>
       </motion.div>
 
@@ -151,7 +151,7 @@ export function IncomeFrequencySelection({ onComplete }: IncomeFrequencySelectio
                     className="mb-0.5"
                   >
                     <span className="bg-white/25 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">
-                      ✓ {lang === 'sw' ? 'Imechaguliwa' : 'Selected'}
+                      ✓ {t('selected', lang)}
                     </span>
                   </motion.div>
 

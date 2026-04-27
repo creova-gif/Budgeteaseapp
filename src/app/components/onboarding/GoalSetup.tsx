@@ -157,7 +157,7 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
           {t('goalQuestion', lang)}
         </h2>
         <p className="text-gray-400 text-sm">
-          {lang === 'sw' ? 'Chagua lengo lako la kwanza' : 'Pick your first financial goal'}
+          {t('pickFirstGoal', lang)}
         </p>
       </motion.div>
 
@@ -262,7 +262,7 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
             {showCustomInput && (
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-                  {lang === 'sw' ? 'Jina la lengo' : 'Goal name'}
+                  {t('goalName', lang)}
                 </label>
                 <input
                   type="text"
@@ -281,7 +281,7 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
                 </label>
                 {selected && selected.id !== 'custom' && getRegionDefault(selected.id) > 0 && (
                   <span className="text-xs text-emerald-600 font-medium">
-                    {lang === 'sw' ? 'Mapendekezo:' : 'Suggested:'} {fmt(getRegionDefault(selected.id))}
+                    {t('suggested', lang)}: {fmt(getRegionDefault(selected.id))}
                   </span>
                 )}
               </div>

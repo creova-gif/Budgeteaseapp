@@ -336,6 +336,23 @@ export const translations = {
   myStats:             { en: 'My Stats', sw: 'Takwimu Zangu' },
   downloaded:          { en: 'Downloaded!', sw: 'Imepakuliwa!' },
   enabledTapToChange:  { en: 'Enabled — tap to change', sw: 'Imewezeshwa — gusa kubadilisha' },
+
+  // Budget Limits
+  budgetLimitsSaved:    { en: 'Budget limits saved! ✓', sw: 'Mipaka imehifadhiwa! ✓' },
+  budgetLimitsTitle:    { en: '🎯 Budget Limits', sw: '🎯 Mipaka ya Bajeti' },
+  budgetLimitsSubtitle: { en: 'Set a spending cap for each category', sw: 'Weka kikomo cha matumizi kwa kila aina' },
+  saveBudgetLimits:     { en: 'Save Budget Limits', sw: 'Hifadhi Mipaka' },
+
+  // Onboarding
+  pickFirstGoal:        { en: 'Pick your first financial goal', sw: 'Chagua lengo lako la kwanza' },
+  whereAreYou:          { en: 'Where are you?', sw: 'Uko wapi?' },
+  freeTagline:          { en: 'Free · No ads · Works offline', sw: 'Bila malipo · Bila matangazo · Bila mtandao' },
+  cashflowHelper:       { en: 'This helps us forecast your cash flow', sw: 'Hii inasaidia kutabiri mwenendo wa pesa' },
+  selected:             { en: 'Selected', sw: 'Imechaguliwa' },
+  personaliseExperience:{ en: 'We personalise your experience', sw: 'Tunaboresha uzoefu wako' },
+
+  // Misc
+  min:                  { en: 'min', sw: 'dak' },
 };
 
 export type TranslationKey = keyof typeof translations;

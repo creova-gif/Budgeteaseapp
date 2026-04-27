@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { BookOpen, Clock } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { t } from '@/app/utils/translations';
 
 interface LearningCardProps {
   title: string;
@@ -24,7 +25,7 @@ export function LearningCard({ title, content, readTime, category }: LearningCar
         </div>
         <div className="flex items-center gap-1 text-sm text-gray-500">
           <Clock className="w-4 h-4" />
-          <span>{readTime} {lang === 'sw' ? 'dak' : 'min'}</span>
+          <span>{readTime} {t('min', lang)}</span>
         </div>
       </div>
       <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>

@@ -196,7 +196,7 @@ export function SplashScreens({ onComplete }: SplashScreensProps) {
           transition={{ delay: 1.4 }}
           className="text-white text-center text-xs mt-4"
         >
-          {lang === 'sw' ? 'Bila malipo · Bila matangazo · Bila mtandao' : 'Free · No ads · Works offline'}
+          {t('freeTagline', lang)}
         </motion.p>
       </div>
     </div>

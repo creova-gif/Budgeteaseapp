@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { useApp } from '@/app/App';
+import { t } from '@/app/utils/translations';
 import { REGION_CONFIG, type Region } from '@/app/utils/currency';
 
 interface RegionChoiceProps {
@@ -32,7 +33,7 @@ export function RegionChoice({ onComplete }: RegionChoiceProps) {
         transition={{ duration: 0.5 }}
       >
         <h2 className="text-2xl font-bold text-center mb-2 text-gray-900">
-          {lang === 'sw' ? 'Uko wapi?' : 'Where are you?'}
+          {t('whereAreYou', lang)}
         </h2>
         <p className="text-center text-sm text-gray-500 mb-8">
           {lang === 'sw' ? 'Tutapanga sarafu na malengo kwa nchi yako' : 'We\'ll set the right currency and goal amounts for your country'}
@@ -106,7 +107,7 @@ export function RegionChoice({ onComplete }: RegionChoiceProps) {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          {lang === 'sw' ? 'Unaweza kubadilisha baadaye katika Mipangilio' : 'You can change this later in Settings'}
+          {t('changeLater', lang)}
         </p>
       </motion.div>
     </div>

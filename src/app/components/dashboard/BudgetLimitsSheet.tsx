@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Check } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { t } from '@/app/utils/translations';
 import { toast } from 'sonner';
 import { REGION_CONFIG } from '@/app/utils/currency';
 
@@ -51,7 +52,7 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
         setCategoryBudget(cat, val);
       }
     });
-    toast.success(lang === 'sw' ? 'Mipaka imehifadhiwa! ✓' : 'Budget limits saved! ✓');
+    toast.success(t('budgetLimitsSaved', lang));
     onClose();
   };
 
@@ -79,10 +80,10 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
         <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
-              {lang === 'sw' ? '🎯 Mipaka ya Bajeti' : '🎯 Budget Limits'}
+              {t('budgetLimitsTitle', lang)}
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
-              {lang === 'sw' ? 'Weka kikomo cha matumizi kwa kila aina' : 'Set a spending cap per category'}
+              {t('budgetLimitsSubtitle', lang)}
             </p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
@@ -155,7 +156,7 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
             className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold text-base flex items-center justify-center gap-2 mt-4 shadow-lg"
           >
             <Check className="w-5 h-5" />
-            {lang === 'sw' ? 'Hifadhi Mipaka' : 'Save Budget Limits'}
+            {t('saveBudgetLimits', lang)}
           </motion.button>
         </div>
       </motion.div>

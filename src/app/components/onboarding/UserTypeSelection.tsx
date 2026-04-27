@@ -81,7 +81,7 @@ export function UserTypeSelection({ onComplete }: UserTypeSelectionProps) {
           {t('welcomeQuestion', lang)}
         </h2>
         <p className="text-gray-400 text-sm">
-          {lang === 'sw' ? 'Tunaboresha uzoefu wako' : 'We personalise your experience'}
+          {t('personaliseExperience', lang)}
         </p>
       </motion.div>
 
