@@ -14,6 +14,7 @@ interface HistoryViewProps {
 
 type FilterType = 'all' | 'income' | 'expense';
 type FilterSource = PaymentSource | 'all';
+type DateRange = 'all' | 'today' | 'week' | 'month';
 
 const PAGE_SIZE = 25;
 
@@ -24,6 +25,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [filterSource, setFilterSource] = useState<FilterSource>('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [filterDateRange, setFilterDateRange] = useState<DateRange>('all');
   const [swipedId, setSwipedId] = useState<string | null>(null);
   const touchStartRef = useRef<number>(0);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -31,13 +33,28 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
 
   const formatCurrency = (amount: number) => fmtCurrency(amount, state.region);
 
+  const dateRangeStart = (() => {
+    const now = new Date();
+    if (filterDateRange === 'today') {
+      const d = new Date(now); d.setHours(0, 0, 0, 0); return d;
+    }
+    if (filterDateRange === 'week') {
+      const d = new Date(now); d.setDate(now.getDate() - now.getDay()); d.setHours(0, 0, 0, 0); return d;
+    }
+    if (filterDateRange === 'month') {
+      return new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+    return null;
+  })();
+
   const filteredTransactions = state.transactions.filter(tx => {
     if (filterType !== 'all' && tx.type !== filterType) return false;
     if (filterSource !== 'all' && tx.source !== filterSource) return false;
+    if (dateRangeStart && tx.date < dateRangeStart) return false;
     return true;
   });
 
-  const isFiltered = filterType !== 'all' || filterSource !== 'all';
+  const isFiltered = filterType !== 'all' || filterSource !== 'all' || filterDateRange !== 'all';
 
   // Paginate before grouping
   const paginatedTransactions = filteredTransactions.slice(0, visibleCount);
@@ -146,6 +163,28 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
         </p>
       </div>
 
+      {/* Date range quick filter chips */}
+      <div className="bg-white border-b border-gray-100 px-4 py-2.5 flex gap-2 overflow-x-auto">
+        {([
+          { value: 'all', sw: 'Zote', en: 'All time' },
+          { value: 'today', sw: 'Leo', en: 'Today' },
+          { value: 'week', sw: 'Wiki hii', en: 'This week' },
+          { value: 'month', sw: 'Mwezi huu', en: 'This month' },
+        ] as { value: DateRange; sw: string; en: string }[]).map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => { setFilterDateRange(opt.value); setVisibleCount(PAGE_SIZE); }}
+            className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition ${
+              filterDateRange === opt.value
+                ? 'bg-orange-500 text-white shadow-sm'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {lang === 'sw' ? opt.sw : opt.en}
+          </button>
+        ))}
+      </div>
+
       {/* Swipe hint */}
       {filteredTransactions.length > 0 && (
         <p className="text-xs text-gray-400 text-center py-2 bg-white border-b border-gray-100">
@@ -168,10 +207,10 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
             </p>
             {isFiltered && (
               <button
-                onClick={() => { setFilterType('all'); setFilterSource('all'); }}
+                onClick={() => { setFilterType('all'); setFilterSource('all'); setFilterDateRange('all'); }}
                 className="mt-3 text-sm text-orange-600 font-medium"
               >
-                {lang === 'sw' ? 'Futa kichujio' : 'Clear filter'}
+                {lang === 'sw' ? 'Futa kichujio' : 'Clear all filters'}
               </button>
             )}
           </motion.div>

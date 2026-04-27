@@ -73,6 +73,7 @@ export interface AppState {
   dismissedNotifications: string[];
   appLockEnabled: boolean;   // Audit Item 11 — Security: PIN lock
   appLockPin: string;        // 4-digit PIN (hashed in production with bcrypt)
+  userName: string;          // Personalized greeting name
 }
 
 interface AppContextType {
@@ -82,7 +83,7 @@ interface AppContextType {
   setUserType: (type: UserType) => void;
   setIncomeFrequency: (freq: IncomeFrequency) => void;
   setFirstGoal: (goal: Goal) => void;
-  addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id' | 'date'> & { date?: Date }) => void;
   addGoal: (goal: Omit<Goal, 'id' | 'completed'>) => void;
   updateGoal: (id: string, amount: number) => void;
   completeOnboarding: () => void;
@@ -106,6 +107,7 @@ interface AppContextType {
   dismissNotification: (id: string) => void;
   setAppLockPin: (pin: string) => void;
   disableAppLock: () => void;
+  setUserName: (name: string) => void;
 }
 
 // Context
@@ -137,6 +139,7 @@ const defaultState: AppState = {
   dismissedNotifications: [],
   appLockEnabled: false,
   appLockPin: '',
+  userName: '',
 };
 
 function loadPersistedState(): AppState {
@@ -230,11 +233,11 @@ function AppProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, firstGoal: goal, goals: [goal] }));
   };
 
-  const addTransaction = (transaction: Omit<Transaction, 'id' | 'date'>) => {
+  const addTransaction = (transaction: Omit<Transaction, 'id' | 'date'> & { date?: Date }) => {
     const newTransaction: Transaction = {
       ...transaction,
       id: Math.random().toString(36).substr(2, 9),
-      date: new Date(),
+      date: transaction.date || new Date(),
     };
 
     setState(prev => {
@@ -483,6 +486,10 @@ function AppProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, appLockPin: '', appLockEnabled: false }));
   };
 
+  const setUserName = (name: string) => {
+    setState(prev => ({ ...prev, userName: name.trim() }));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -516,6 +523,7 @@ function AppProvider({ children }: { children: ReactNode }) {
         dismissNotification,
         setAppLockPin,
         disableAppLock,
+        setUserName,
       }}
     >
       {children}

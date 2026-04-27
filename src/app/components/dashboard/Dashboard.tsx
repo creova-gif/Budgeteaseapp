@@ -73,6 +73,7 @@ function getGreeting(userType: string | null, lang: 'sw' | 'en') {
 }
 
 const PIE_COLORS = ['#10b981','#0d9488','#06b6d4','#f97316','#8b5cf6','#3b82f6','#ec4899','#f59e0b'];
+const TAB_ORDER: ActiveView[] = ['dashboard', 'goals', 'history', 'insights', 'settings'];
 
 // ── Natural language query parser ───────────────────────────────────────────
 function nlSearch(query: string, transactions: Transaction[]): Transaction[] {
@@ -106,6 +107,31 @@ export function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [showBudgetLimits, setShowBudgetLimits] = useState(false);
+  const [prefilledCategory, setPrefilledCategory] = useState<string | undefined>(undefined);
+  const [prefilledAmount, setPrefilledAmount] = useState<number | undefined>(undefined);
+
+  // ── Tab swipe navigation ──────────────────────────────────────────────────
+  const mainTouchStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const onMainTouchStart = (e: React.TouchEvent) => {
+    mainTouchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const onMainTouchEnd = (e: React.TouchEvent) => {
+    if (swipedId !== null) return; // don't trigger when swiping a transaction row
+    const dx = e.changedTouches[0].clientX - mainTouchStartRef.current.x;
+    const dy = e.changedTouches[0].clientY - mainTouchStartRef.current.y;
+    if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 2.5) {
+      const idx = TAB_ORDER.indexOf(activeView);
+      if (dx < 0 && idx < TAB_ORDER.length - 1) {
+        setActiveView(TAB_ORDER[idx + 1]);
+        if (navigator.vibrate) navigator.vibrate(8);
+      } else if (dx > 0 && idx > 0) {
+        setActiveView(TAB_ORDER[idx - 1]);
+        if (navigator.vibrate) navigator.vibrate(8);
+      }
+    }
+  };
 
   useEffect(() => {
     if (shouldShowDailySummary() && state.transactions.length > 0) {
@@ -137,6 +163,25 @@ export function Dashboard() {
   const totalBalance = state.cashBalance + state.mobileMoneyBalance + state.bankBalance;
   const animatedBalance = useCountUp(totalBalance);
   const animatedExpenses = useCountUp(periodStats.expenses);
+
+  // ── Week-over-week comparison ─────────────────────────────────────────────
+  const weekOverWeek = useMemo(() => {
+    const now = new Date();
+    const thisWeekStart = new Date(now);
+    thisWeekStart.setDate(now.getDate() - now.getDay());
+    thisWeekStart.setHours(0, 0, 0, 0);
+    const lastWeekStart = new Date(thisWeekStart);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    const thisWeekSpend = state.transactions
+      .filter(tx => tx.type === 'expense' && tx.date >= thisWeekStart)
+      .reduce((s, t) => s + t.amount, 0);
+    const lastWeekSpend = state.transactions
+      .filter(tx => tx.type === 'expense' && tx.date >= lastWeekStart && tx.date < thisWeekStart)
+      .reduce((s, t) => s + t.amount, 0);
+    if (lastWeekSpend === 0) return null;
+    const delta = Math.round(((thisWeekSpend - lastWeekSpend) / lastWeekSpend) * 100);
+    return { delta, thisWeekSpend, lastWeekSpend };
+  }, [state.transactions]);
 
   // ── Monthly progress (always month view for the arc) ─────────────────────
   const monthlyStats = useMemo(() => {
@@ -237,7 +282,11 @@ export function Dashboard() {
 
   return (
     <div className="flex flex-col h-screen bg-emerald-50 overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
+      <div
+        className="flex-1 overflow-y-auto"
+        onTouchStart={onMainTouchStart}
+        onTouchEnd={onMainTouchEnd}
+      >
         <AnimatePresence mode="wait">
 
           {/* ══════════════ HOME VIEW ══════════════ */}
@@ -255,7 +304,9 @@ export function Dashboard() {
                 <div className="flex items-start justify-between mb-5 relative">
                   <div>
                     <p className="text-emerald-200 text-xs mb-0.5">{getGreeting(state.userType, lang)}</p>
-                    <p className="text-white font-black" style={{ fontSize: '1.1rem' }}>PesaPlan</p>
+                    <p className="text-white font-black" style={{ fontSize: '1.1rem' }}>
+                      {state.userName ? state.userName : 'PesaPlan'}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
                     {state.streak > 0 && (
@@ -319,6 +370,24 @@ export function Dashboard() {
                   ))}
                 </div>
 
+                {/* Week-over-week comparison badge */}
+                {period === 'week' && weekOverWeek && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                    className="flex justify-center"
+                  >
+                    <div className={`text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 ${
+                      weekOverWeek.delta <= 0
+                        ? 'bg-emerald-400/30 text-emerald-100'
+                        : 'bg-red-400/30 text-red-100'
+                    }`}>
+                      {weekOverWeek.delta <= 0 ? '↓' : '↑'}
+                      {Math.abs(weekOverWeek.delta)}%{' '}
+                      {lang === 'sw' ? 'ikilinganishwa na wiki iliyopita' : 'vs last week'}
+                    </div>
+                  </motion.div>
+                )}
+
                 {/* Quick actions */}
                 <div className="grid grid-cols-3 gap-2">
                   <motion.button
@@ -337,15 +406,23 @@ export function Dashboard() {
                     <PlusCircle className="w-5 h-5 text-green-300" />
                     <span className="text-xs text-white font-semibold">{t('addIncome', lang)}</span>
                   </motion.button>
-                  {/* Quick Add Expense */}
+                  {/* Quick Repeat — repeats last expense */}
                   <motion.button
                     whileTap={{ scale: 0.93 }}
-                    onClick={() => { setTxType('expense'); setShowAddTx(true); }}
+                    onClick={() => {
+                      const lastExpense = state.transactions.find(t => t.type === 'expense');
+                      setTxType('expense');
+                      if (lastExpense) {
+                        setPrefilledCategory(lastExpense.category);
+                        setPrefilledAmount(lastExpense.amount);
+                      }
+                      setShowAddTx(true);
+                    }}
                     className="bg-white/15 hover:bg-white/25 rounded-2xl p-3 flex flex-col items-center gap-1.5 transition"
                   >
                     <Camera className="w-5 h-5 text-yellow-300" />
                     <span className="text-xs text-white font-semibold">
-                      {lang === 'sw' ? 'Haraka' : 'Quick'}
+                      {lang === 'sw' ? 'Rudia' : 'Repeat'}
                     </span>
                   </motion.button>
                 </div>
@@ -516,9 +593,14 @@ export function Dashboard() {
                     </div>
                     <div className="px-5 pb-4 space-y-2.5">
                       {budgetAlerts.slice(0, 3).map(alert => (
-                        <div key={alert.cat} className={`rounded-2xl px-3.5 py-3 flex items-center gap-3 ${
-                          alert.pct >= 100 ? 'bg-red-50 border border-red-100' : 'bg-orange-50 border border-orange-100'
-                        }`}>
+                        <motion.div
+                          key={alert.cat}
+                          animate={alert.pct >= 100 ? { scale: [1, 1.01, 1] } : {}}
+                          transition={alert.pct >= 100 ? { duration: 1.6, repeat: Infinity, ease: 'easeInOut' } : {}}
+                          className={`rounded-2xl px-3.5 py-3 flex items-center gap-3 ${
+                            alert.pct >= 100 ? 'bg-red-50 border border-red-100' : 'bg-orange-50 border border-orange-100'
+                          }`}
+                        >
                           <AlertTriangle className={`w-4 h-4 shrink-0 ${alert.pct >= 100 ? 'text-red-500' : 'text-orange-500'}`} />
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center mb-1">
@@ -535,7 +617,7 @@ export function Dashboard() {
                               {fmt(alert.spent)} / {fmt(alert.budget)}
                             </p>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </motion.div>
@@ -603,6 +685,45 @@ export function Dashboard() {
                   </motion.div>
                 )}
 
+                {/* ── SPENDING INSIGHT CARD ── */}
+                {pieData.length > 0 && (() => {
+                  const total = pieData.reduce((s, d) => s + d.value, 0);
+                  const top = pieData[0];
+                  const topPct = Math.round((top.value / total) * 100);
+                  const isHigh = topPct > 40;
+                  const secondMsg = (() => {
+                    if (pieData.length >= 2) {
+                      const second = pieData[1];
+                      const secondPct = Math.round((second.value / total) * 100);
+                      return lang === 'sw'
+                        ? ` ${second.name} inashika ${secondPct}%.`
+                        : ` ${second.name} takes ${secondPct}%.`;
+                    }
+                    return '';
+                  })();
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}
+                      className={`rounded-3xl px-5 py-4 border ${
+                        isHigh
+                          ? 'bg-amber-50 border-amber-100'
+                          : 'bg-emerald-50 border-emerald-100'
+                      }`}
+                    >
+                      <p className={`text-sm font-bold mb-1 ${isHigh ? 'text-amber-900' : 'text-emerald-900'}`}>
+                        {isHigh ? '⚠️' : '✅'}{' '}
+                        {lang === 'sw' ? 'Maarifa ya Matumizi' : 'Spending Insight'}
+                      </p>
+                      <p className={`text-sm leading-relaxed ${isHigh ? 'text-amber-800' : 'text-emerald-800'}`}>
+                        {lang === 'sw'
+                          ? `${topPct}% ya matumizi yako yanakwenda ${top.name}.${secondMsg}${isHigh ? ' Jaribu kupunguza kidogo.' : ' Uko vizuri!'}`
+                          : `${topPct}% of your spending goes to ${top.name}.${secondMsg}${isHigh ? ' Consider cutting back a bit.' : " You're managing well!"}`
+                        }
+                      </p>
+                    </motion.div>
+                  );
+                })()}
+
                 {/* ── ACTIVE GOAL ── */}
                 {activeGoal && (
                   <motion.div
@@ -667,11 +788,30 @@ export function Dashboard() {
 
                   {filteredTx.length === 0 ? (
                     <div className="px-5 pb-6 text-center">
-                      <p className="text-sm text-gray-300">
-                        {searchQuery
-                          ? (lang === 'sw' ? 'Hakuna matokeo' : 'No results found')
-                          : t('noTransactions', lang)}
-                      </p>
+                      {!searchQuery && state.transactions.length === 0 ? (
+                        <div className="py-4">
+                          <div className="text-4xl mb-3">💸</div>
+                          <p className="text-sm font-semibold text-gray-500 mb-1">
+                            {lang === 'sw' ? 'Anza kurekodi matumizi yako' : 'Start tracking your money'}
+                          </p>
+                          <p className="text-xs text-gray-400 mb-4">
+                            {lang === 'sw' ? 'Bonyeza "Matumizi" au "Mapato" hapo juu' : 'Tap "Expense" or "Income" above to begin'}
+                          </p>
+                          <motion.button
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => { setTxType('expense'); setShowAddTx(true); }}
+                            className="bg-emerald-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-md"
+                          >
+                            {lang === 'sw' ? '+ Ongeza Kwanza' : '+ Add First Entry'}
+                          </motion.button>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-300 py-4">
+                          {searchQuery
+                            ? (lang === 'sw' ? 'Hakuna matokeo' : 'No results found')
+                            : t('noTransactions', lang)}
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <div>
@@ -846,7 +986,18 @@ export function Dashboard() {
       <SpendingNudge onAddExpense={() => { setTxType('expense'); setShowAddTx(true); }} />
       <ExitExperience />
 
-      {showAddTx && <AddTransactionDialog type={txType} onClose={() => setShowAddTx(false)} />}
+      {showAddTx && (
+        <AddTransactionDialog
+          type={txType}
+          onClose={() => {
+            setShowAddTx(false);
+            setPrefilledCategory(undefined);
+            setPrefilledAmount(undefined);
+          }}
+          prefilledCategory={prefilledCategory}
+          prefilledAmount={prefilledAmount}
+        />
+      )}
       {showDailySummary && <DailySummaryDialog onClose={() => setShowDailySummary(false)} />}
       {editingTx && <EditTransactionDialog transaction={editingTx} onClose={() => setEditingTx(null)} />}
       {showBudgetLimits && <BudgetLimitsSheet onClose={() => setShowBudgetLimits(false)} />}

@@ -14,13 +14,14 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const { state, setLanguage, setRegion, clearAllData, setAppLockPin, disableAppLock } = useApp();
+  const { state, setLanguage, setRegion, clearAllData, setAppLockPin, disableAppLock, setUserName } = useApp();
   const lang = state.language;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [exportDone, setExportDone] = useState(false);
   const [showLegal, setShowLegal] = useState(false);
   const [showLockSetup, setShowLockSetup] = useState(false);
   const [showDisableLockConfirm, setShowDisableLockConfirm] = useState(false);
+  const [nameInput, setNameInput] = useState(state.userName);
 
   const handleExportCSV = () => {
     if (state.transactions.length === 0) return;
@@ -129,6 +130,30 @@ export function SettingsView({ onBack }: SettingsViewProps) {
       </div>
 
       <div className="px-4 py-5 space-y-5">
+        {/* Name input */}
+        <div className="bg-white rounded-2xl shadow-sm p-4">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">
+            {lang === 'sw' ? 'Jina Lako' : 'Your Name'}
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              placeholder={lang === 'sw' ? 'Weka jina lako...' : 'Enter your name...'}
+              className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              maxLength={30}
+            />
+            <button
+              onClick={() => setUserName(nameInput)}
+              disabled={nameInput.trim() === state.userName}
+              className="px-4 py-2 rounded-xl bg-emerald-500 text-white text-sm font-semibold disabled:opacity-40 hover:bg-emerald-600 transition"
+            >
+              {lang === 'sw' ? 'Hifadhi' : 'Save'}
+            </button>
+          </div>
+        </div>
+
         {/* Profile Stats */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">

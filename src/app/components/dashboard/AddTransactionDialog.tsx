@@ -73,6 +73,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
   const [autoDetected, setAutoDetected] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // Audit: prevent double-submit
   const [amountError, setAmountError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
 
   // Audit Item 15: max cap 99 million TZS, block negatives
   const MAX_AMOUNT = 99_999_999;
@@ -169,7 +170,8 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
       }
     }
 
-    addTransaction({ type, amount: parsed, category, source, notes });
+    const txDate = selectedDate ? new Date(selectedDate + 'T12:00:00') : new Date();
+    addTransaction({ type, amount: parsed, category, source, notes, date: txDate });
     toast.success(
       type === 'expense'
         ? `✓ ${category} – TSh ${parsed.toLocaleString()}`
@@ -370,6 +372,31 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
                 className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-blue-400 transition"
               />
             </div>
+
+            {/* Date picker — allow logging past transactions */}
+            {(() => {
+              const today = new Date().toISOString().split('T')[0];
+              const isToday = selectedDate === today;
+              return (
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                    {lang === 'sw' ? 'Tarehe' : 'Date'}
+                    {!isToday && (
+                      <span className="ml-2 text-amber-500 normal-case font-normal">
+                        {lang === 'sw' ? '(tarehe ya nyuma)' : '(past date)'}
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    max={today}
+                    onChange={e => setSelectedDate(e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-blue-400 transition"
+                  />
+                </div>
+              );
+            })()}
 
             {/* Round-up savings nudge */}
             {isExpense && state.roundUpEnabled && amount && parseFloat(amount) > 0 && (() => {
