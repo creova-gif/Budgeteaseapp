@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   PlusCircle, MinusCircle, Target, TrendingUp, History,
   Settings, Home, Flame, ChevronRight, Trash2, Search,
-  Sparkles, Camera, AlertTriangle, Bell,
+  Sparkles, RotateCcw, AlertTriangle, Bell,
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
-import { formatCurrency } from '@/app/utils/currency';
+import { formatCurrency, REGION_CONFIG } from '@/app/utils/currency';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { GoalsView } from './GoalsView';
@@ -420,7 +420,7 @@ export function Dashboard() {
                     }}
                     className="bg-white/15 hover:bg-white/25 rounded-2xl p-3 flex flex-col items-center gap-1.5 transition"
                   >
-                    <Camera className="w-5 h-5 text-yellow-300" />
+                    <RotateCcw className="w-5 h-5 text-yellow-300" />
                     <span className="text-xs text-white font-semibold">
                       {lang === 'sw' ? 'Rudia' : 'Repeat'}
                     </span>
@@ -1030,9 +1030,11 @@ function GoalContributeSheet({
   onContribute: (amount: number) => void;
   onClose: () => void;
 }) {
+  const { state: appState } = useApp();
   const [amount, setAmount] = useState('');
-  const quickAmounts = [5000, 10000, 20000, 50000];
-  const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
+  const regionCfg = REGION_CONFIG[appState.region];
+  const quickAmounts = regionCfg.quickAmounts[3];
+  const fmt = (n: number) => formatCurrency(n, appState.region);
   const remaining = goal.target - goal.current;
 
   return (
@@ -1068,7 +1070,7 @@ function GoalContributeSheet({
           </button>
         )}
         <div className="flex items-center border-2 border-emerald-500 rounded-2xl mb-4 overflow-hidden">
-          <span className="px-3 text-sm text-gray-400 font-medium">TSh</span>
+          <span className="px-3 text-sm text-gray-400 font-medium">{regionCfg.symbol}</span>
           <input
             type="number" placeholder="0" value={amount}
             onChange={e => setAmount(e.target.value)}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Check } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { toast } from 'sonner';
+import { REGION_CONFIG } from '@/app/utils/currency';
 
 interface BudgetLimitsSheetProps {
   onClose: () => void;
@@ -31,6 +32,7 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
   const { state, setCategoryBudget } = useApp();
   const lang = state.language;
   const cats = CATEGORIES[lang];
+  const symbol = REGION_CONFIG[state.region].symbol;
 
   // Local draft state
   const [drafts, setDrafts] = useState<Record<string, string>>(() => {
@@ -101,7 +103,7 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
                   <span className="text-sm font-semibold text-gray-800">{cat}</span>
                   {numVal > 0 && (
                     <span className="ml-auto text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">
-                      TSh {numVal.toLocaleString()}
+                      {symbol} {numVal.toLocaleString()}
                     </span>
                   )}
                 </div>
@@ -125,7 +127,7 @@ export function BudgetLimitsSheet({ onClose }: BudgetLimitsSheetProps) {
 
                 {/* Manual input */}
                 <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden focus-within:border-emerald-500 transition">
-                  <span className="pl-3 text-xs text-gray-500 font-medium">TSh</span>
+                  <span className="pl-3 text-xs text-gray-500 font-medium">{symbol}</span>
                   <input
                     type="number"
                     placeholder="0"

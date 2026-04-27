@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, Bot, Sparkles } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
-import { formatCurrency } from '@/app/utils/currency';
+import { formatCurrency, REGION_CONFIG } from '@/app/utils/currency';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -57,9 +57,11 @@ function generateReply(
 
   // Today
   if (matches(['leo', 'today', 'siku ya leo'])) {
+    const warnThreshold = REGION_CONFIG[state.region].dailyWarnThreshold;
+    const isHigh = todayExp > warnThreshold;
     return lang === 'sw'
-      ? `Leo umetumia ${fmt(todayExp)}. ${todayExp > 10000 ? 'Angalia matumizi yako! ⚠️' : 'Uko vizuri. ✅'}`
-      : `Today you spent ${fmt(todayExp)}. ${todayExp > 10000 ? 'Watch your spending! ⚠️' : "You're doing well. ✅"}`;
+      ? `Leo umetumia ${fmt(todayExp)}. ${isHigh ? 'Angalia matumizi yako! ⚠️' : 'Uko vizuri. ✅'}`
+      : `Today you spent ${fmt(todayExp)}. ${isHigh ? 'Watch your spending! ⚠️' : "You're doing well. ✅"}`;
   }
 
   // This week

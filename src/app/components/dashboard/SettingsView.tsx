@@ -88,7 +88,12 @@ export function SettingsView({ onBack }: SettingsViewProps) {
       icon: Calendar,
       label: t('incomeFrequency', lang),
       value: state.incomeFrequency
-        ? { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly', irregular: 'Irregular' }[state.incomeFrequency]
+        ? {
+            daily:     lang === 'sw' ? 'Kila Siku'    : 'Daily',
+            weekly:    lang === 'sw' ? 'Kila Wiki'    : 'Weekly',
+            monthly:   lang === 'sw' ? 'Kila Mwezi'  : 'Monthly',
+            irregular: lang === 'sw' ? 'Isiyo ya Kawaida' : 'Irregular',
+          }[state.incomeFrequency]
         : (lang === 'sw' ? 'Haijawekwa' : 'Not set'),
       action: () => {},
       badge: null,

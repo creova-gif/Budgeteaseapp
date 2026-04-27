@@ -4,6 +4,7 @@ import { AlertTriangle, Settings2 } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { BudgetLimitsSheet } from './BudgetLimitsSheet';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
+import { formatCurrency } from '@/app/utils/currency';
 
 function getBarColor(pct: number) {
   if (pct >= 100) return { bar: 'bg-red-500', text: 'text-red-700', bg: 'bg-red-50 border-red-200' };
@@ -18,7 +19,7 @@ export function BudgetHealthBars() {
   const [showLimits, setShowLimits] = useState(false);
   const categorySpending = getCategorySpending();
   const formatK = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(0)}k` : n.toString();
-  const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
+  const fmt = (n: number) => formatCurrency(n, state.region);
 
   const budgetedCategories = Object.keys(state.categoryBudgets);
   const spendingCategories = Object.keys(categorySpending).filter(c => !budgetedCategories.includes(c));
@@ -87,7 +88,7 @@ export function BudgetHealthBars() {
                       {pct !== null && pct >= 80 && <span className="text-xs">⚠️</span>}
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-gray-600">TSh {formatK(spent)}</span>
+                      <span className="text-xs text-gray-600">{fmt(spent)}</span>
                       {budget && <span className="text-xs text-gray-400"> / {formatK(budget)}</span>}
                     </div>
                   </div>

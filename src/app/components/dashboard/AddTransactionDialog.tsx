@@ -5,6 +5,7 @@ import { useApp, type TransactionType, type PaymentSource } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { toast } from 'sonner';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
+import { REGION_CONFIG, type Region } from '@/app/utils/currency';
 
 // ── Feature 1: Auto-categorization keyword map ──────────────────────────────
 const KEYWORD_MAP: Array<{ keywords: string[]; cat: { sw: string; en: string } }> = [
@@ -36,12 +37,12 @@ interface AddTransactionDialogProps {
 }
 
 const EXPENSE_CATEGORIES = {
-  sw: ['Chakula', 'Usafiri', 'Kodi', 'Malipo', 'Data na Muda', 'Biashara', 'Afya', 'Burudani', 'Familia'],
-  en: ['Food', 'Transport', 'Rent', 'Bills', 'Data & Airtime', 'Business', 'Health', 'Entertainment', 'Family'],
+  sw: ['Chakula', 'Usafiri', 'Kodi', 'Malipo', 'Data na Muda', 'Biashara', 'Afya', 'Burudani', 'Familia', 'Akiba'],
+  en: ['Food', 'Transport', 'Rent', 'Bills', 'Data & Airtime', 'Business', 'Health', 'Entertainment', 'Family', 'Savings'],
 };
 const INCOME_CATEGORIES = {
-  sw: ['Biashara', 'Mishahara', 'Nyingine'],
-  en: ['Business', 'Salary', 'Other'],
+  sw: ['Mishahara', 'Biashara', 'Kazi ya Muda', 'Kilimo', 'Kodi', 'Zawadi', 'Serikali', 'Nyingine'],
+  en: ['Salary', 'Business', 'Freelance', 'Farming', 'Rental', 'Gift', 'Government', 'Other'],
 };
 
 const SOURCES: PaymentSource[] = ['cash', 'mpesa', 'airtel', 'tigo', 'bank'];
@@ -53,13 +54,14 @@ const SOURCE_LABELS: Record<string, { sw: string; en: string }> = {
   bank: { sw: 'Benki', en: 'Bank' },
 };
 
-// Time-based amount suggestions
-function getQuickAmounts(lang: 'sw' | 'en') {
+// Time-based, region-aware amount suggestions
+function getQuickAmounts(region: Region): number[] {
+  const cfg = REGION_CONFIG[region];
   const hour = new Date().getHours();
-  if (hour >= 6 && hour < 10) return [2000, 3000, 5000, 10000];
-  if (hour >= 11 && hour < 15) return [3000, 5000, 8000, 15000];
-  if (hour >= 17 && hour < 22) return [5000, 8000, 10000, 20000];
-  return [2000, 5000, 10000, 20000];
+  if (hour >= 6 && hour < 10) return cfg.quickAmounts[0];
+  if (hour >= 11 && hour < 15) return cfg.quickAmounts[1];
+  if (hour >= 17 && hour < 22) return cfg.quickAmounts[2];
+  return cfg.quickAmounts[3];
 }
 
 export function AddTransactionDialog({ type, onClose, prefilledCategory, prefilledAmount }: AddTransactionDialogProps) {
@@ -71,18 +73,19 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
   const [source, setSource] = useState<PaymentSource>('cash');
   const [notes, setNotes] = useState('');
   const [autoDetected, setAutoDetected] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Audit: prevent double-submit
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [amountError, setAmountError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
 
-  // Audit Item 15: max cap 99 million TZS, block negatives
-  const MAX_AMOUNT = 99_999_999;
+  const regionCfg = REGION_CONFIG[state.region];
+  const symbol = regionCfg.symbol;
+  const MAX_AMOUNT = regionCfg.maxTransactionAmount;
 
   const handleAmountChange = (value: string) => {
     setAmountError(null);
     const num = parseFloat(value);
     if (value && num > MAX_AMOUNT) {
-      setAmountError(lang === 'sw' ? `Kiwango cha juu: TSh ${MAX_AMOUNT.toLocaleString()}` : `Maximum: TSh ${MAX_AMOUNT.toLocaleString()}`);
+      setAmountError(lang === 'sw' ? `Kiwango cha juu: ${symbol} ${MAX_AMOUNT.toLocaleString()}` : `Maximum: ${symbol} ${MAX_AMOUNT.toLocaleString()}`);
       return;
     }
     if (value && num < 0) {
@@ -147,7 +150,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
       return;
     }
     if (parsed > MAX_AMOUNT) {
-      toast.error(lang === 'sw' ? `Kiwango cha juu ni TSh ${MAX_AMOUNT.toLocaleString()}` : `Maximum amount is TSh ${MAX_AMOUNT.toLocaleString()}`);
+      toast.error(lang === 'sw' ? `Kiwango cha juu ni ${symbol} ${MAX_AMOUNT.toLocaleString()}` : `Maximum amount is ${symbol} ${MAX_AMOUNT.toLocaleString()}`);
       return;
     }
     if (!Number.isFinite(parsed)) {
@@ -166,7 +169,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
       const roundUpTo = Math.ceil(parsed / 500) * 500;
       const roundUp = roundUpTo - parsed;
       if (roundUp > 0 && roundUp < 500) {
-        toast.success(`🪙 +TSh ${roundUp.toLocaleString()} ${lang === 'sw' ? 'imeokolewa (Round-up)' : 'saved (round-up)'}`, { duration: 2500 });
+        toast.success(`🪙 +${symbol} ${roundUp.toLocaleString()} ${lang === 'sw' ? 'imeokolewa (Round-up)' : 'saved (round-up)'}`, { duration: 2500 });
       }
     }
 
@@ -174,8 +177,8 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
     addTransaction({ type, amount: parsed, category, source, notes, date: txDate });
     toast.success(
       type === 'expense'
-        ? `✓ ${category} – TSh ${parsed.toLocaleString()}`
-        : (lang === 'sw' ? `✓ Mapato – TSh ${parsed.toLocaleString()}` : `✓ Income – TSh ${parsed.toLocaleString()}`),
+        ? `✓ ${category} – ${symbol} ${parsed.toLocaleString()}`
+        : (lang === 'sw' ? `✓ Mapato – ${symbol} ${parsed.toLocaleString()}` : `✓ Income – ${symbol} ${parsed.toLocaleString()}`),
       { duration: 2000 }
     );
     onClose();
@@ -184,8 +187,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
   const isExpense = type === 'expense';
   const headerColor = isExpense ? 'from-red-500 to-red-600' : 'from-emerald-500 to-emerald-600';
 
-  // ── AUDIT FIX #1: These were used in JSX but never defined — CRASH BUG ──
-  const quickAmounts = getQuickAmounts(lang);
+  const quickAmounts = getQuickAmounts(state.region);
   const categories = isExpense ? EXPENSE_CATEGORIES[lang] : INCOME_CATEGORIES[lang];
 
   return (
@@ -221,7 +223,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
 
             {/* BIG Amount Input */}
             <div className="flex items-baseline gap-2">
-              <span className="text-white/80 text-lg font-medium">TSh</span>
+              <span className="text-white/80 text-lg font-medium">{symbol}</span>
               <input
                 type="number"
                 placeholder="0"
@@ -248,7 +250,11 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
                     amount === amt.toString() ? 'bg-white text-gray-900' : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  {amt >= 1000 ? `${amt / 1000}k` : amt}
+                  {amt >= 1_000_000
+                    ? `${(amt / 1_000_000).toFixed(1)}M`
+                    : amt >= 1000
+                      ? `${amt / 1000}k`
+                      : amt.toLocaleString()}
                 </button>
               ))}
             </div>
@@ -407,8 +413,8 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
                   <span className="text-lg">🪙</span>
                   <p className="text-xs text-emerald-800">
                     {lang === 'sw'
-                      ? `TSh ${roundUp.toLocaleString()} itaokolewa (round-up)`
-                      : `TSh ${roundUp.toLocaleString()} will be saved (round-up)`}
+                      ? `${symbol} ${roundUp.toLocaleString()} itaokolewa (round-up)`
+                      : `${symbol} ${roundUp.toLocaleString()} will be saved (round-up)`}
                   </p>
                 </div>
               ) : null;
@@ -427,7 +433,7 @@ export function AddTransactionDialog({ type, onClose, prefilledCategory, prefill
                     : 'bg-emerald-600 hover:bg-emerald-700'
               }`}
             >
-              {t('save', lang)} {amount && category ? `– TSh ${parseFloat(amount || '0').toLocaleString()}` : ''}
+              {t('save', lang)} {amount && category ? `– ${symbol} ${parseFloat(amount || '0').toLocaleString()}` : ''}
             </motion.button>
           </div>
         </motion.div>

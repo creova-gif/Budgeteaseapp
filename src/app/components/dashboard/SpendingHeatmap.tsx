@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { useApp } from '@/app/App';
+import { formatCurrency } from '@/app/utils/currency';
 
 export function SpendingHeatmap() {
   const { state } = useApp();
@@ -111,7 +112,7 @@ export function SpendingHeatmap() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: (wi * 7 + di) * 0.01 }}
                     className={`h-7 rounded-md ${getCellColor(val)} cursor-default`}
-                    title={val > 0 ? `TSh ${val.toLocaleString()}` : ''}
+                    title={val > 0 ? formatCurrency(val, state.region) : ''}
                   />
                 ))}
               </div>

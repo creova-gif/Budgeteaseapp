@@ -4,7 +4,7 @@ import { ArrowLeft, Target, Plus, Calendar, TrendingUp } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { toast } from 'sonner';
-import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
+import { formatCurrency as fmtCurrency, REGION_CONFIG } from '@/app/utils/currency';
 
 interface GoalsViewProps {
   onBack: () => void;
@@ -27,6 +27,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
 
   const fmt = (n: number) => fmtCurrency(n, state.region);
   const fmtShort = fmt;
+  const symbol = REGION_CONFIG[state.region].symbol;
 
   const handleAddGoal = () => {
     if (!newGoalTitle || !newGoalTarget) return;
@@ -256,7 +257,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
 
                 <div>
                   <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1.5">
-                    {lang === 'sw' ? 'Kiasi Lengwa (TSh)' : 'Target Amount (TSh)'}
+                    {lang === 'sw' ? 'Kiasi Lengwa' : 'Target Amount'}
                   </label>
                   <input
                     type="number"
@@ -362,7 +363,7 @@ export function GoalsView({ onBack }: GoalsViewProps) {
                 </p>
 
                 <div className="flex items-center border-2 border-purple-500 rounded-2xl mb-4 overflow-hidden">
-                  <span className="px-3 text-sm text-gray-400">TSh</span>
+                  <span className="px-3 text-sm text-gray-400">{symbol}</span>
                   <input
                     type="number"
                     placeholder="0"

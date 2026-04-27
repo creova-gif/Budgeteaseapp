@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Bell, X, AlertTriangle, CheckCircle, TrendingUp, Target, Flame } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
+import { formatCurrency } from '@/app/utils/currency';
 
 /** Risk 2 — Notification System (in-app computed alerts) */
 
@@ -20,7 +21,7 @@ export function NotificationCenter() {
   const lang = state.language;
   const [open, setOpen] = useState(false);
 
-  const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
+  const fmt = (n: number) => formatCurrency(n, state.region);
 
   const dismissed = state.dismissedNotifications ?? [];
 

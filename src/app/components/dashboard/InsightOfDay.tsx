@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Lightbulb } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { formatCurrency } from '@/app/utils/currency';
 
 type InsightType = 'over_budget' | 'weekly_up' | 'weekly_down' | 'top_cat' | 'savings_tip' | 'motivation' | 'streak';
 
@@ -115,7 +116,7 @@ export function InsightOfDay() {
       const save10 = Math.round(totalExpense * 0.1);
       candidates.push({
         type: 'savings_tip', emoji: '💰',
-        text: lang === 'sw' ? `Piga 10% — okoa TSh ${save10.toLocaleString()}.` : `Cut 10% → save TSh ${save10.toLocaleString()}.`,
+        text: lang === 'sw' ? `Piga 10% — okoa ${formatCurrency(save10, state.region)}.` : `Cut 10% → save ${formatCurrency(save10, state.region)}.`,
         style: 'tip',
       });
     }

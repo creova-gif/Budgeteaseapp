@@ -4,6 +4,7 @@ import { X, Trash2, Check } from 'lucide-react';
 import { useApp, type Transaction, type PaymentSource } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { toast } from 'sonner';
+import { REGION_CONFIG } from '@/app/utils/currency';
 
 interface EditTransactionDialogProps {
   transaction: Transaction;
@@ -31,6 +32,7 @@ const SOURCE_LABELS: Record<string, { sw: string; en: string }> = {
 export function EditTransactionDialog({ transaction, onClose }: EditTransactionDialogProps) {
   const { state, editTransaction, deleteTransaction } = useApp();
   const lang = state.language;
+  const symbol = REGION_CONFIG[state.region].symbol;
 
   const [amount, setAmount] = useState(transaction.amount.toString());
   const [category, setCategory] = useState(transaction.category);
@@ -100,10 +102,10 @@ export function EditTransactionDialog({ transaction, onClose }: EditTransactionD
             {/* Amount */}
             <div>
               <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                {t('amount', lang)} (TZS)
+                {t('amount', lang)}
               </label>
               <div className="flex items-center border-2 border-gray-200 rounded-2xl overflow-hidden focus-within:border-emerald-500 transition">
-                <span className="px-4 text-sm text-gray-400 font-medium">TSh</span>
+                <span className="px-4 text-sm text-gray-400 font-medium">{symbol}</span>
                 <input
                   type="number"
                   value={amount}

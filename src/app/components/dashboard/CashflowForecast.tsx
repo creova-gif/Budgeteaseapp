@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { CalendarClock, TrendingDown, AlertCircle } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
+import { formatCurrency } from '@/app/utils/currency';
 
 interface RecurringItem {
   category: string;
@@ -54,7 +55,7 @@ export function CashflowForecast() {
   const { state } = useApp();
   const lang = state.language;
 
-  const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
+  const fmt = (n: number) => formatCurrency(n, state.region);
 
   const recurring = useMemo(() => detectRecurring(state.transactions), [state.transactions]);
 

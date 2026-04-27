@@ -5,6 +5,7 @@ import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { Button } from '@/app/components/ui/button';
 import { toast } from 'sonner';
+import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
 
 interface DailySummaryDialogProps {
   onClose: () => void;
@@ -15,13 +16,7 @@ export function DailySummaryDialog({ onClose }: DailySummaryDialogProps) {
   const lang = state.language;
   const [autoSaveAmount, setAutoSaveAmount] = useState(1000);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('sw-TZ', {
-      style: 'currency',
-      currency: 'TZS',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
+  const formatCurrency = (amount: number) => fmtCurrency(amount, state.region);
 
   const todayIncome = getTodayIncome();
   const todayExpenses = getTodayExpenses();
@@ -64,8 +59,8 @@ export function DailySummaryDialog({ onClose }: DailySummaryDialogProps) {
       updateGoal(activeGoal.id, suggestedSave);
       toast.success(
         lang === 'sw'
-          ? `TSh ${suggestedSave.toLocaleString()} imehifadhiwa kwenye "${activeGoal.title}"!`
-          : `TSh ${suggestedSave.toLocaleString()} saved to "${activeGoal.title}"!`
+          ? `${formatCurrency(suggestedSave)} imehifadhiwa kwenye "${activeGoal.title}"!`
+          : `${formatCurrency(suggestedSave)} saved to "${activeGoal.title}"!`
       );
     }
     markDailySummaryShown();
@@ -160,8 +155,8 @@ export function DailySummaryDialog({ onClose }: DailySummaryDialogProps) {
                   </p>
                   <p className="text-sm text-purple-700">
                     {lang === 'sw'
-                      ? `Hifadhi TSh ${suggestedSave.toLocaleString()} kwenye lengo lako?`
-                      : `Save TSh ${suggestedSave.toLocaleString()} toward your goal?`}
+                      ? `Hifadhi ${formatCurrency(suggestedSave)} kwenye lengo lako?`
+                      : `Save ${formatCurrency(suggestedSave)} toward your goal?`}
                   </p>
                 </div>
               </div>
@@ -188,8 +183,8 @@ export function DailySummaryDialog({ onClose }: DailySummaryDialogProps) {
             <p className="text-sm text-blue-900">
               💡 <strong>{lang === 'sw' ? 'Ushauri:' : 'Tip:'}</strong>{' '}
               {lang === 'sw'
-                ? 'Jaribu kupunguza matumizi ya chakula kidogo ili kuokoa +TSh 5,000 kwa siku.'
-                : 'Try limiting food spending slightly to save +TSh 5,000 per day.'}
+                ? 'Jaribu kupunguza matumizi ya chakula kidogo ili kuokoa kiasi zaidi kwa siku.'
+                : 'Try limiting food spending slightly to save more each day.'}
             </p>
           </div>
 

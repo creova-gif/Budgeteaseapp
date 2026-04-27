@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Trophy, Zap, X, Play, CheckCircle, Users, Plus, Trash2 } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { toast } from 'sonner';
+import { formatCurrency, REGION_CONFIG } from '@/app/utils/currency';
 
 /** Roadmap Feature 7 — Community Savings Challenges */
 
@@ -66,9 +67,9 @@ export function SavingsChallenge() {
   const [logTarget, setLogTarget] = useState<string | null>(null);
   const [customAmount, setCustomAmount] = useState('');
 
-  const fmt = (n: number) => n >= 1000 ? `TSh ${(n / 1000).toFixed(0)}k` : `TSh ${n}`;
-  const fmtFull = (n: number) =>
-    new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', minimumFractionDigits: 0 }).format(n);
+  const fmt = (n: number) => formatCurrency(n, state.region);
+  const fmtFull = fmt;
+  const symbol = REGION_CONFIG[state.region].symbol;
 
   const activeChallenges = state.challenges?.filter(c => !c.completed) ?? [];
   const completedChallenges = state.challenges?.filter(c => c.completed) ?? [];
@@ -178,7 +179,7 @@ export function SavingsChallenge() {
               {logTarget === c.id ? (
                 <div className="px-4 pb-4 flex gap-2">
                   <div className="flex-1 flex items-center border-2 border-emerald-400 rounded-xl overflow-hidden">
-                    <span className="px-2 text-xs text-gray-400">TSh</span>
+                    <span className="px-2 text-xs text-gray-400">{symbol}</span>
                     <input
                       type="number"
                       placeholder={c.dailyAmount.toString()}
@@ -282,7 +283,7 @@ export function SavingsChallenge() {
               {/* Custom daily amount */}
               <div className="mb-4">
                 <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1.5">
-                  {lang === 'sw' ? 'Kiasi cha kila siku (TSh) — hiari' : 'Daily amount (TSh) — optional'}
+                  {lang === 'sw' ? 'Kiasi cha kila siku — hiari' : 'Daily amount — optional'}
                 </label>
                 <input
                   type="number"

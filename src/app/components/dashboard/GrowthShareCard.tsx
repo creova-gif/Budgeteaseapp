@@ -4,6 +4,7 @@ import { Share2, Copy, CheckCircle, Users, Zap, ChevronRight } from 'lucide-reac
 import { useApp } from '@/app/App';
 import { toast } from 'sonner';
 import { t } from '@/app/utils/translations';
+import { formatCurrency } from '@/app/utils/currency';
 
 /** Risk 3 — Growth Loops: Share progress, referral + savings challenges */
 
@@ -13,7 +14,7 @@ export function GrowthShareCard() {
   const [copied, setCopied] = useState(false);
   const [showShare, setShowShare] = useState(false);
 
-  const fmt = (n: number) => n >= 1000 ? `TSh ${(n / 1000).toFixed(0)}k` : `TSh ${n}`;
+  const fmt = (n: number) => formatCurrency(n, state.region);
 
   // ── Compute shareable stats ──
   const now = new Date();

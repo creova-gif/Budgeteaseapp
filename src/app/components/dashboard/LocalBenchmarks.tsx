@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { TrendingUp, TrendingDown, Minus, Users } from 'lucide-react';
 import { useApp } from '@/app/App';
+import { formatCurrency } from '@/app/utils/currency';
 
 export function LocalBenchmarks() {
   const { state, getTodayExpenses, getCategorySpending } = useApp();
@@ -84,7 +85,7 @@ export function LocalBenchmarks() {
               {lang === 'sw' ? 'Wewe' : 'You'}
             </p>
             <p className="text-lg font-bold text-gray-900">
-              TSh {todayExpenses.toLocaleString()}
+              {formatCurrency(todayExpenses, state.region)}
             </p>
           </div>
           <div className="text-gray-400">vs</div>
@@ -93,7 +94,7 @@ export function LocalBenchmarks() {
               {lang === 'sw' ? 'Wastani wa eneo' : 'Area average'}
             </p>
             <p className="text-lg font-semibold text-gray-600">
-              TSh {localAverages.dailyTotal.toLocaleString()}
+              {formatCurrency(localAverages.dailyTotal, state.region)}
             </p>
           </div>
         </div>
@@ -117,11 +118,11 @@ export function LocalBenchmarks() {
                   <p className="text-gray-700">{category}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-gray-900 font-medium">
-                      TSh {userSpend.toLocaleString()}
+                      {formatCurrency(userSpend, state.region)}
                     </span>
                     <span className="text-gray-400">/</span>
                     <span className="text-gray-500">
-                      TSh {average.toLocaleString()}
+                      {formatCurrency(average, state.region)}
                     </span>
                   </div>
                 </div>

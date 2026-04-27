@@ -1,0 +1,156 @@
+BRUTAL MOBILE APP QA + UX + PRODUCT STRESS TEST PROMPT
+
+Prompt:
+
+Act as an elite cross-functional team:
+
+Senior Product Designer (fintech, mobile-first)
+QA Automation Engineer
+UX Researcher (Africa-focused)
+Fintech Compliance & Payments Expert
+Growth Product Manager
+
+You are auditing and stress-testing a **mobile budgeting app designed for users in Tanzania, Kenya, Uganda, Rwanda, and Burundi.
+
+The app must be simple, trustworthy, fast, and culturally relevant, and ready for immediate launch within 72 hours.
+
+🎯 OBJECTIVE
+
+Identify every flaw, broken flow, UX issue, missing feature, and trust gap that could cause:
+
+User drop-off
+Confusion
+Failed transactions
+Loss of trust
+
+Then redesign and optimize for world-class usability under real African conditions (low bandwidth, mobile-first, diverse financial literacy levels).
+
+🧨 PHASE 1: USER SIMULATION (REALITY TEST)
+
+Simulate these user types:
+
+First-time smartphone user
+Low-income earner tracking daily expenses
+Student budgeting weekly allowance
+Small business owner tracking cash flow
+User switching languages or currencies
+User with unstable internet
+
+For each:
+
+Walk through onboarding → daily use → advanced features
+Identify confusion, friction, or drop-off points
+Capture emotional response (confidence vs frustration)
+🔍 PHASE 2: UI/UX BRUTAL AUDIT
+Interface & Layout
+Are layouts clean or cluttered?
+Are buttons placed logically and reachable (thumb-friendly)?
+Is spacing, typography, and hierarchy consistent?
+Buttons & Interactions
+Test EVERY button:
+Does it work?
+Does it give feedback (loading, success, error)?
+Identify:
+Dead buttons
+Misleading CTAs
+Delayed responses
+Navigation
+Can a user move through the app without thinking?
+Are there unnecessary steps or loops?
+Are there hidden or confusing flows?
+⚙️ PHASE 3: FEATURE & SYSTEM VALIDATION
+Core Budgeting Features
+Income tracking
+Expense tracking
+Category breakdowns
+Budget limits
+Insights/analytics
+
+Check:
+
+Accuracy
+Ease of input
+Clarity of outputs
+Regional Relevance (CRITICAL)
+Currency handling:
+Tanzanian Shilling (TZS)
+Kenyan Shilling (KES)
+Ugandan Shilling (UGX)
+Rwandan Franc (RWF)
+Burundian Franc (BIF)
+Does the app:
+Format currency correctly?
+Support local financial habits (cash-heavy usage)?
+Handle offline or delayed syncing?
+Missing Features (Identify & Suggest)
+Offline mode
+SMS-based transaction logging
+Mobile money integrations (M-Pesa, Airtel Money, etc.)
+Multi-language support (Swahili, English, French)
+Visual budgeting (icons, charts for low literacy users)
+🤖 PHASE 4: CHATBOT & SUPPORT SYSTEM
+Is the chatbot:
+Helpful or generic?
+Context-aware?
+Able to guide budgeting decisions?
+
+Test:
+
+Basic questions
+Confusing inputs
+Errors
+
+Output:
+
+Weaknesses in intelligence
+Improvements for human-like support
+🔁 PHASE 5: WORKFLOW STRESS TEST
+
+Test EVERY workflow from start to finish:
+
+Onboarding
+Adding income
+Adding expenses
+Editing/deleting entries
+Viewing reports
+Settings changes
+
+Ensure:
+
+No empty screens
+No broken flows
+No dead ends
+Every action produces a result
+📄 PHASE 6: PRD & PRODUCT LOGIC AUDIT
+Does the app align with a clear Product Requirements Document (PRD)?
+Are features cohesive or scattered?
+Is the product solving a clear problem effectively?
+
+Output:
+
+Missing product logic
+Misaligned features
+Opportunities to simplify
+🚨 PHASE 7: LAUNCH-CRITICAL ISSUES
+
+Identify:
+
+Bugs that block launch
+UX issues that kill retention
+Trust issues that prevent adoption
+
+Rank:
+
+Critical (must fix before Wednesday)
+High priority
+Nice-to-have
+🚀 FINAL OUTPUT
+
+Provide:
+
+Top 15 critical issues (brutally honest)
+UI/UX redesign recommendations
+Feature gaps + must-add features
+Optimized user journey (step-by-step)
+“Ready for launch?” verdict (YES/NO + why)
+48-hour fix plan (exact execution steps)

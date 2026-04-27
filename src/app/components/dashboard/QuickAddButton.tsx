@@ -4,6 +4,7 @@ import { Plus, X, TrendingDown, Zap } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { toast } from 'sonner';
+import { formatCurrency } from '@/app/utils/currency';
 
 export function QuickAddButton() {
   const { state, addTransaction } = useApp();
@@ -47,7 +48,7 @@ export function QuickAddButton() {
 
   const handleQuickAdd = (category: string, amount: number) => {
     addTransaction({ type: 'expense', amount, category, source: 'cash', notes: '' });
-    toast.success(`✓ ${category} – TSh ${amount.toLocaleString()}`, { duration: 2000 });
+    toast.success(`✓ ${category} – ${formatCurrency(amount, state.region)}`, { duration: 2000 });
     setIsOpen(false);
   };
 
@@ -130,7 +131,7 @@ export function QuickAddButton() {
                         <TrendingDown className="w-4 h-4 text-red-400 mt-0.5" />
                       </div>
                       <p className="font-semibold text-gray-900 text-sm truncate">{s.category}</p>
-                      <p className="text-base font-black text-emerald-700">TSh {s.amount.toLocaleString()}</p>
+                      <p className="text-base font-black text-emerald-700">{formatCurrency(s.amount, state.region)}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
                     </motion.button>
                   ))}
