@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Progress } from '@/app/components/ui/progress';
 
@@ -6,6 +6,8 @@ import { Progress } from '@/app/components/ui/progress';
 import '@/i18n';
 import { syncI18nLanguage } from '@/i18n';
 import { Analytics } from '@/app/utils/analytics';
+import type { Region } from '@/app/utils/currency';
+export type { Region };
 
 // Types
 export type Language = 'sw' | 'en';
@@ -47,6 +49,7 @@ export interface SavingsChallenge {
 
 export interface AppState {
   language: Language;
+  region: Region;
   userType: UserType | null;
   incomeFrequency: IncomeFrequency | null;
   firstGoal: Goal | null;
@@ -75,6 +78,7 @@ export interface AppState {
 interface AppContextType {
   state: AppState;
   setLanguage: (lang: Language) => void;
+  setRegion: (region: Region) => void;
   setUserType: (type: UserType) => void;
   setIncomeFrequency: (freq: IncomeFrequency) => void;
   setFirstGoal: (goal: Goal) => void;
@@ -109,6 +113,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const defaultState: AppState = {
   language: 'sw',
+  region: 'TZ',
   userType: null,
   incomeFrequency: null,
   firstGoal: null,
@@ -154,21 +159,42 @@ function loadPersistedState(): AppState {
   return defaultState;
 }
 
-// ── AUDIT FIX #2: PIN hash at module level so AppLock can import verifyPin ──
-// djb2-style hash → base36 (deterministic, not bcrypt — replace in production)
-export function hashPin(pin: string): string {
-  let h = 5381;
-  for (let i = 0; i < pin.length; i++) {
-    h = (h * 33) ^ pin.charCodeAt(i);
-    h = h >>> 0;
+// ── PIN Security: per-install salt + 10k-round stretch ───────────────────────
+function getInstallSalt(): string {
+  let salt = localStorage.getItem('pesaplan_salt_v2');
+  if (!salt) {
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    salt = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem('pesaplan_salt_v2', salt);
   }
-  return h.toString(36);
+  return salt;
 }
 
-/** Verify a PIN against stored value — supports legacy plaintext + hashed */
+export function hashPin(pin: string): string {
+  const salt = getInstallSalt();
+  let input = pin + ':' + salt;
+  for (let round = 0; round < 10000; round++) {
+    let h = 5381;
+    for (let i = 0; i < input.length; i++) {
+      h = ((h << 5) + h) ^ input.charCodeAt(i);
+      h = h >>> 0;
+    }
+    input = h.toString(36) + ':' + (round & 0xff).toString(16) + ':' + salt.slice(0, 8);
+  }
+  return input.slice(0, 48);
+}
+
+/** Verify PIN — handles legacy plaintext, legacy djb2 (short), and new stretched hash */
 export function verifyPin(input: string, stored: string): boolean {
-  if (/^\d{4}$/.test(stored)) return stored === input;       // legacy plaintext
-  return hashPin(input) === stored;                           // hashed
+  if (/^\d{4}$/.test(stored)) return stored === input;   // legacy plaintext
+  if (stored.length < 15) {
+    // Legacy djb2 (single-pass, no salt) — re-hash inline for backward compat
+    let h = 5381;
+    for (let i = 0; i < input.length; i++) { h = (h * 33) ^ input.charCodeAt(i); h = h >>> 0; }
+    return h.toString(36) === stored;
+  }
+  return hashPin(input) === stored;                       // new stretched hash
 }
 
 function AppProvider({ children }: { children: ReactNode }) {
@@ -184,8 +210,12 @@ function AppProvider({ children }: { children: ReactNode }) {
   }, [state]);
 
   const setLanguage = (lang: Language) => {
-    syncI18nLanguage(lang);          // keep i18next in sync with AppState
+    syncI18nLanguage(lang);
     setState(prev => ({ ...prev, language: lang }));
+  };
+
+  const setRegion = (region: Region) => {
+    setState(prev => ({ ...prev, region }));
   };
 
   const setUserType = (type: UserType) => {
@@ -458,6 +488,7 @@ function AppProvider({ children }: { children: ReactNode }) {
       value={{
         state,
         setLanguage,
+        setRegion,
         setUserType,
         setIncomeFrequency,
         setFirstGoal,
@@ -503,6 +534,7 @@ export function useApp() {
 // Import components directly (no lazy loading to avoid circular dependencies)
 import { SplashScreens } from '@/app/components/onboarding/SplashScreens';
 import { LanguageChoice } from '@/app/components/onboarding/LanguageChoice';
+import { RegionChoice } from '@/app/components/onboarding/RegionChoice';
 import { UserTypeSelection } from '@/app/components/onboarding/UserTypeSelection';
 import { IncomeFrequencySelection } from '@/app/components/onboarding/IncomeFrequencySelection';
 import { GoalSetup } from '@/app/components/onboarding/GoalSetup';
@@ -511,11 +543,13 @@ import { Toaster } from '@/app/components/ui/sonner';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { AppLock } from '@/app/components/dashboard/AppLock';
 
+const INACTIVITY_MS = 5 * 60 * 1000; // 5 minutes
+
 // App Content
 function AppContent() {
   const { state, completeOnboarding } = useApp();
   const [onboardingStep, setOnboardingStep] = useState<
-    'splash' | 'language' | 'userType' | 'incomeFreq' | 'goal' | 'complete'
+    'splash' | 'language' | 'region' | 'userType' | 'incomeFreq' | 'goal' | 'complete'
   >('splash');
 
   // ── App Lock ────────────────────────────────────────────────────────────────
@@ -540,6 +574,23 @@ function AppContent() {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, [state.appLockEnabled, state.onboardingComplete]);
 
+  // AUDIT FIX: Inactivity re-lock after 5 minutes of no interaction
+  const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!state.appLockEnabled || !state.onboardingComplete) return;
+    const reset = () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = setTimeout(() => setIsAppLocked(true), INACTIVITY_MS);
+    };
+    const events = ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(e => window.addEventListener(e, reset, { passive: true }));
+    reset();
+    return () => {
+      events.forEach(e => window.removeEventListener(e, reset));
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    };
+  }, [state.appLockEnabled, state.onboardingComplete]);
+
   if (state.appLockEnabled && state.onboardingComplete && isAppLocked) {
     return <AppLock mode="unlock" storedPin={state.appLockPin} onUnlocked={() => setIsAppLocked(false)} />;
   }
@@ -560,7 +611,7 @@ function AppContent() {
 
   // Progress bar for onboarding
   const getProgress = () => {
-    const steps = ['splash', 'language', 'userType', 'incomeFreq', 'goal'];
+    const steps = ['splash', 'language', 'region', 'userType', 'incomeFreq', 'goal'];
     const currentIndex = steps.indexOf(onboardingStep);
     return ((currentIndex + 1) / steps.length) * 100;
   };
@@ -583,7 +634,10 @@ function AppContent() {
         <SplashScreens onComplete={() => handleStepComplete('language')} />
       )}
       {onboardingStep === 'language' && (
-        <LanguageChoice onComplete={() => handleStepComplete('userType')} />
+        <LanguageChoice onComplete={() => handleStepComplete('region')} />
+      )}
+      {onboardingStep === 'region' && (
+        <RegionChoice onComplete={() => handleStepComplete('userType')} />
       )}
       {onboardingStep === 'userType' && (
         <UserTypeSelection onComplete={() => handleStepComplete('incomeFreq')} />

@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
+import { formatCurrency } from '@/app/utils/currency';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { GoalsView } from './GoalsView';
@@ -113,8 +114,7 @@ export function Dashboard() {
     }
   }, []);
 
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', minimumFractionDigits: 0 }).format(n);
+  const fmt = (n: number) => formatCurrency(n, state.region);
   const fmtK = (n: number) => n >= 1_000_000 ? `${(n/1_000_000).toFixed(1)}M` : n >= 1000 ? `${(n/1000).toFixed(0)}K` : n.toString();
 
   // ── Period stats ─────────────────────────────────────────────────────────
@@ -337,19 +337,15 @@ export function Dashboard() {
                     <PlusCircle className="w-5 h-5 text-green-300" />
                     <span className="text-xs text-white font-semibold">{t('addIncome', lang)}</span>
                   </motion.button>
-                  {/* AI Scan */}
+                  {/* Quick Add Expense */}
                   <motion.button
                     whileTap={{ scale: 0.93 }}
                     onClick={() => { setTxType('expense'); setShowAddTx(true); }}
-                    className="relative bg-white/15 hover:bg-white/25 rounded-2xl p-3 flex flex-col items-center gap-1.5 transition"
+                    className="bg-white/15 hover:bg-white/25 rounded-2xl p-3 flex flex-col items-center gap-1.5 transition"
                   >
                     <Camera className="w-5 h-5 text-yellow-300" />
                     <span className="text-xs text-white font-semibold">
-                      {lang === 'sw' ? 'Scan' : 'Scan'}
-                    </span>
-                    {/* AI badge */}
-                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-full px-1.5 py-0.5 flex items-center gap-0.5 shadow" style={{ fontSize: '0.55rem', fontWeight: 700 }}>
-                      <Sparkles className="w-2.5 h-2.5" />AI
+                      {lang === 'sw' ? 'Haraka' : 'Quick'}
                     </span>
                   </motion.button>
                 </div>
@@ -773,9 +769,10 @@ export function Dashboard() {
                     </div>
                   </div>
                   <button
+                    onClick={() => window.dispatchEvent(new CustomEvent('pesaplan:open-ai'))}
                     className="mt-3 w-full bg-white/15 hover:bg-white/25 rounded-2xl py-2.5 text-sm font-semibold transition text-center"
                   >
-                    {lang === 'sw' ? 'Uliza AI zaidi →' : 'Ask AI more →'}
+                    {lang === 'sw' ? 'Uliza Msaidizi zaidi →' : 'Ask Assistant more →'}
                   </button>
                 </motion.div>
 

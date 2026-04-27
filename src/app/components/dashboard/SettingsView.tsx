@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Globe, DollarSign, Calendar, Download, Trash2, AlertTriangle, X, CheckCircle, Shield, Rocket, Lock, Unlock, BarChart2 } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
+import { REGION_CONFIG } from '@/app/utils/currency';
 import { SmartBudgetBuilder } from './SmartBudgetBuilder';
 import { LegalView } from './LegalView';
 import { AppStoreReadiness } from './AppStoreReadiness';
@@ -17,7 +18,7 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const { state, setLanguage, clearAllData, setAppLockPin, disableAppLock } = useApp();
+  const { state, setLanguage, setRegion, clearAllData, setAppLockPin, disableAppLock } = useApp();
   const lang = state.language;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [exportDone, setExportDone] = useState(false);
@@ -29,10 +30,11 @@ export function SettingsView({ onBack }: SettingsViewProps) {
     if (state.transactions.length === 0) return;
     Analytics.logEvent('data_exported', { count: state.transactions.length });
 
-    const headers = ['Date', 'Time', 'Type', 'Category', 'Amount (TZS)', 'Source', 'Notes'];
+    const regionCfg = REGION_CONFIG[state.region];
+    const headers = ['Date', 'Time', 'Type', 'Category', `Amount (${regionCfg.currency})`, 'Source', 'Notes'];
     const rows = state.transactions.map(tx => [
-      tx.date.toLocaleDateString('en-TZ'),
-      tx.date.toLocaleTimeString('en-TZ', { hour: '2-digit', minute: '2-digit' }),
+      tx.date.toLocaleDateString(regionCfg.locale),
+      tx.date.toLocaleTimeString(regionCfg.locale, { hour: '2-digit', minute: '2-digit' }),
       tx.type,
       tx.category,
       tx.amount.toString(),
@@ -76,9 +78,13 @@ export function SettingsView({ onBack }: SettingsViewProps) {
     },
     {
       icon: DollarSign,
-      label: t('currency', lang),
-      value: 'TZS – Tanzanian Shilling',
-      action: () => {},
+      label: lang === 'sw' ? 'Nchi / Sarafu' : 'Country / Currency',
+      value: `${REGION_CONFIG[state.region].flag} ${REGION_CONFIG[state.region].currency}`,
+      action: () => {
+        const order = ['TZ', 'KE', 'UG', 'RW', 'BI'] as const;
+        const next = order[(order.indexOf(state.region) + 1) % order.length];
+        setRegion(next);
+      },
       badge: null,
     },
     {
@@ -172,6 +178,16 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </motion.button>
             ))}
           </div>
+        </div>
+
+        {/* Data Storage Warning */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-800 leading-relaxed">
+            {lang === 'sw'
+              ? 'Data yako imehifadhiwa kwenye kifaa hiki peke yake. Hakuna akiba ya wingu. Hamisha CSV mara kwa mara ili kulinda data yako.'
+              : 'Your data is stored on this device only. No cloud backup. Export CSV regularly to keep a safe copy.'}
+          </p>
         </div>
 
         {/* Actions */}

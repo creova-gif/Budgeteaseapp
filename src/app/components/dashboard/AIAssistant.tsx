@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, Bot, Sparkles } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
+import { formatCurrency } from '@/app/utils/currency';
 
 interface Message {
   role: 'user' | 'assistant';
   text: string;
 }
 
-const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
-
 function generateReply(
   input: string,
   state: ReturnType<typeof useApp>['state'],
   lang: 'sw' | 'en'
 ): string {
+  const fmt = (n: number) => formatCurrency(n, state.region);
   const lower = input.toLowerCase();
   const now = new Date();
 
@@ -168,9 +168,26 @@ export function AIAssistant() {
     ? ['Pesa zangu ziko wapi?', 'Bajeti yangu iko sawa?', 'Leo nimetumia kiasi gani?', 'Lengo langu liko wapi?']
     : ["Where did my money go?", "Am I on budget?", "What did I spend today?", "How's my goal?"];
 
+  const initMessages = (): Message[] => [{
+    role: 'assistant',
+    text: lang === 'sw'
+      ? `Habari! Mimi ni msaidizi wako wa fedha wa PesaPlan. 🤖\nNiulize chochote kuhusu matumizi yako!`
+      : `Hello! I'm your PesaPlan budget assistant. 🤖\nAsk me anything about your spending!`,
+  }];
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Listen for open event fired by "Ask Assistant more" button in Dashboard
+  useEffect(() => {
+    const handler = () => {
+      setOpen(true);
+      setMessages(prev => prev.length === 0 ? initMessages() : prev);
+    };
+    window.addEventListener('pesaplan:open-ai', handler);
+    return () => window.removeEventListener('pesaplan:open-ai', handler);
+  }, [lang]);
 
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
@@ -180,13 +197,6 @@ export function AIAssistant() {
     setMessages(prev => [...prev, userMsg, botMsg]);
     setInput('');
   };
-
-  const initMessages = (): Message[] => [{
-    role: 'assistant',
-    text: lang === 'sw'
-      ? `Habari! Mimi ni mshauri wako wa fedha wa PesaPlan. 🤖\nNiulize chochote kuhusu matumizi yako!`
-      : `Hello! I'm your PesaPlan financial assistant. 🤖\nAsk me anything about your spending!`,
-  }];
 
   return (
     <>

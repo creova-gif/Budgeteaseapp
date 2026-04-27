@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
+import { REGION_CONFIG } from '@/app/utils/currency';
 
 interface GoalSetupProps {
   onComplete: () => void;
@@ -81,20 +82,35 @@ const goalOptions: GoalOption[] = [
   },
 ];
 
+// Region-specific defaults keyed to goalOption.id
+const GOAL_DEFAULTS_BY_REGION: Record<string, keyof typeof REGION_CONFIG['TZ']['goalDefaults']> = {
+  schoolFees: 'schoolFees',
+  bills: 'bills',
+  emergencyFund: 'emergencyFund',
+  data: 'data',
+  travel: 'travel',
+};
+
 export function GoalSetup({ onComplete }: GoalSetupProps) {
   const { state, setFirstGoal } = useApp();
   const lang = state.language;
+  const regionCfg = REGION_CONFIG[state.region];
+
   const [selectedGoal, setSelectedGoal] = useState('');
   const [customGoal, setCustomGoal] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [amountError, setAmountError] = useState('');
 
+  const getRegionDefault = (goalId: string): number => {
+    const key = GOAL_DEFAULTS_BY_REGION[goalId];
+    return key ? regionCfg.goalDefaults[key] : 0;
+  };
+
   const handleGoalSelect = (goalId: string) => {
     setSelectedGoal(goalId);
-    const goal = goalOptions.find(g => g.id === goalId);
-    if (goalId !== 'custom' && goal) {
-      setTargetAmount(goal.defaultAmount.toString());
+    if (goalId !== 'custom') {
+      setTargetAmount(getRegionDefault(goalId).toString());
       setShowCustomInput(false);
     } else {
       setTargetAmount('');
@@ -105,11 +121,13 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
 
   const handleContinue = () => {
     const amount = parseInt(targetAmount);
-    if (!selectedGoal || !targetAmount || isNaN(amount) || amount < 1000) {
-      setAmountError(lang === 'sw' ? 'Ingiza kiasi sahihi (angalau TSh 1,000)' : 'Enter a valid amount (min TSh 1,000)');
+    if (!selectedGoal || !targetAmount || isNaN(amount) || amount < 100) {
+      setAmountError(lang === 'sw'
+        ? `Ingiza kiasi sahihi (angalau ${regionCfg.symbol} 100)`
+        : `Enter a valid amount (min ${regionCfg.symbol} 100)`);
       return;
     }
-    if (amount > 99_999_999) {
+    if (amount > 999_999_999) {
       setAmountError(lang === 'sw' ? 'Kiasi ni kikubwa sana' : 'Amount too large');
       return;
     }
@@ -123,7 +141,7 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
   };
 
   const selected = goalOptions.find(g => g.id === selectedGoal);
-  const fmt = (n: number) => `TSh ${n.toLocaleString()}`;
+  const fmt = (n: number) => `${regionCfg.symbol} ${n.toLocaleString()}`;
 
   return (
     <div className="min-h-screen bg-white flex flex-col px-5 pt-14 pb-8">
@@ -259,11 +277,11 @@ export function GoalSetup({ onComplete }: GoalSetupProps) {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  {t('targetAmount', lang)} (TZS)
+                  {t('targetAmount', lang)} ({regionCfg.currency})
                 </label>
-                {selected && selected.defaultAmount > 0 && (
+                {selected && selected.id !== 'custom' && getRegionDefault(selected.id) > 0 && (
                   <span className="text-xs text-emerald-600 font-medium">
-                    {lang === 'sw' ? 'Mapendekezo:' : 'Suggested:'} {fmt(selected.defaultAmount)}
+                    {lang === 'sw' ? 'Mapendekezo:' : 'Suggested:'} {fmt(getRegionDefault(selected.id))}
                   </span>
                 )}
               </div>

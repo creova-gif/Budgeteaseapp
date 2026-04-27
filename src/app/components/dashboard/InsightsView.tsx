@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, TrendingUp, Lightbulb, Smartphone, AlertCircle } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
+import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
 import { SpendingHeatmap } from './SpendingHeatmap';
 import { FinancialEducation } from './FinancialEducation';
 import { SavingsChallenge } from './SavingsChallenge';
@@ -24,8 +25,7 @@ export function InsightsView({ onBack }: InsightsViewProps) {
   const { state, getCategorySpending } = useApp();
   const lang = state.language;
 
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', minimumFractionDigits: 0 }).format(amount);
+  const formatCurrency = (amount: number) => fmtCurrency(amount, state.region);
 
   // ── Real 7-day data computed from actual transactions ──
   const weeklyData = Array.from({ length: 7 }, (_, i) => {

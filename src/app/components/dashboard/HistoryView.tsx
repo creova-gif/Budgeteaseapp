@@ -5,6 +5,7 @@ import { useApp, type PaymentSource, type Transaction } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { getCategoryIcon } from '@/app/utils/categoryIcons';
 import { format } from 'date-fns';
+import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
 
 interface HistoryViewProps {
   onBack: () => void;
@@ -28,8 +29,7 @@ export function HistoryView({ onBack, onEditTransaction }: HistoryViewProps) {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', minimumFractionDigits: 0 }).format(amount);
+  const formatCurrency = (amount: number) => fmtCurrency(amount, state.region);
 
   const filteredTransactions = state.transactions.filter(tx => {
     if (filterType !== 'all' && tx.type !== filterType) return false;

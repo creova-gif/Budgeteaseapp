@@ -4,6 +4,7 @@ import { ArrowLeft, Target, Plus, Calendar, TrendingUp } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { toast } from 'sonner';
+import { formatCurrency as fmtCurrency } from '@/app/utils/currency';
 
 interface GoalsViewProps {
   onBack: () => void;
@@ -24,9 +25,8 @@ export function GoalsView({ onBack }: GoalsViewProps) {
   const [showCelebration, setShowCelebration] = useState(false);
   const [celebratedGoal, setCelebratedGoal] = useState('');
 
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', minimumFractionDigits: 0 }).format(n);
-  const fmtShort = (n: number) => n >= 1000 ? `TSh ${(n / 1000).toFixed(0)}k` : `TSh ${n}`;
+  const fmt = (n: number) => fmtCurrency(n, state.region);
+  const fmtShort = fmt;
 
   const handleAddGoal = () => {
     if (!newGoalTitle || !newGoalTarget) return;
