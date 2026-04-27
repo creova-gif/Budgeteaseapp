@@ -657,7 +657,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AppProvider>
-        <div className="size-full bg-gray-50">
+        <div className="w-full max-w-md min-h-screen relative bg-gray-50 overflow-hidden">
           <AppContent />
           <Toaster position="top-center" />
         </div>
