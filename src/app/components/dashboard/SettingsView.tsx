@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Globe, DollarSign, Calendar, Download, Trash2, AlertTriangle, X, CheckCircle, Shield, Rocket, Lock, Unlock, BarChart2 } from 'lucide-react';
+import { React as ReactLogo, Typescript as TypescriptLogo, Vitejs as ViteLogo, Tailwindcss as TailwindLogo, Supabase as SupabaseLogo } from 'svgl-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { REGION_CONFIG } from '@/app/utils/currency';
@@ -357,11 +358,35 @@ export function SettingsView({ onBack }: SettingsViewProps) {
 
         {/* App Info */}
         <div className="text-center text-xs text-gray-400 py-4">
-          <p className="font-medium">PesaPlan v1.0.0</p>
+          <p className="font-medium text-gray-600">PesaPlan v1.0.0</p>
           <p className="mt-0.5">{lang === 'sw' ? 'Imetengenezwa kwa East Africa 🌍' : 'Made for East Africa 🌍'}</p>
+
+          <div className="flex items-center justify-center gap-4 mt-4 mb-1">
+            <div className="flex flex-col items-center gap-1">
+              <ReactLogo className="w-6 h-6 opacity-50" />
+              <span className="text-[9px] text-gray-400">React</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <TypescriptLogo className="w-6 h-6 opacity-50" />
+              <span className="text-[9px] text-gray-400">TypeScript</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <ViteLogo className="w-6 h-6 opacity-50" />
+              <span className="text-[9px] text-gray-400">Vite</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <TailwindLogo className="w-6 h-6 opacity-50" />
+              <span className="text-[9px] text-gray-400">Tailwind</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <SupabaseLogo className="w-6 h-6 opacity-50" />
+              <span className="text-[9px] text-gray-400">Supabase</span>
+            </div>
+          </div>
+
           <button
             onClick={() => setShowLegal(true)}
-            className="mt-2 text-xs text-gray-400 underline underline-offset-2"
+            className="mt-3 text-xs text-gray-400 underline underline-offset-2"
           >
             {lang === 'sw' ? 'Sera ya Faragha · Masharti ya Huduma' : 'Privacy Policy · Terms of Service'}
           </button>
