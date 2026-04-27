@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Globe, DollarSign, Calendar, Download, Trash2, AlertTriangle, X, CheckCircle, Shield, Rocket, Lock, Unlock, BarChart2 } from 'lucide-react';
-import { React as ReactLogo, Typescript as TypescriptLogo, Vitejs as ViteLogo, Tailwindcss as TailwindLogo, Supabase as SupabaseLogo } from 'svgl-react';
+import { ArrowLeft, Globe, DollarSign, Calendar, Download, Trash2, AlertTriangle, X, CheckCircle, Shield, Lock, Unlock } from 'lucide-react';
 import { useApp } from '@/app/App';
 import { t } from '@/app/utils/translations';
 import { REGION_CONFIG } from '@/app/utils/currency';
 import { SmartBudgetBuilder } from './SmartBudgetBuilder';
 import { LegalView } from './LegalView';
-import { AppStoreReadiness } from './AppStoreReadiness';
-import { AppStoreListing } from './AppStoreListing';
-import { CrashMonitor } from './CrashMonitor';
-import { AppIconPreview } from './AppIconPreview';
 import { AppLockSetup } from './AppLock';
 import { Analytics } from '@/app/utils/analytics';
 
@@ -255,39 +250,6 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <SmartBudgetBuilder />
         </div>
 
-        {/* ── Crash Monitor (Audit Item 19) ── */}
-        <div>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            🔥 {lang === 'sw' ? 'Ufuatiliaji wa Hitilafu' : 'Crash Monitoring'}
-          </h2>
-          <CrashMonitor />
-        </div>
-
-        {/* ── App Store Readiness (Audit Item 20) ── */}
-        <div>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            <Rocket className="inline w-3 h-3 mr-1" />
-            {lang === 'sw' ? 'Utayari wa Uzinduzi' : 'Launch Readiness'}
-          </h2>
-          <AppStoreReadiness />
-        </div>
-
-        {/* ── App Store Listing Draft (Audit Item 19) ── */}
-        <div>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            🏪 {lang === 'sw' ? 'Orodha ya Duka la Programu' : 'App Store Listing'}
-          </h2>
-          <AppStoreListing />
-        </div>
-
-        {/* ── App Icon Preview (Audit Item 19) ── */}
-        <div>
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            🎨 {lang === 'sw' ? 'Muundo wa Ikoni' : 'App Icon Design'}
-          </h2>
-          <AppIconPreview />
-        </div>
-
         {/* ── Security (App Lock) ── */}
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
@@ -333,60 +295,16 @@ export function SettingsView({ onBack }: SettingsViewProps) {
               </div>
             </motion.button>
 
-            {/* Analytics info row */}
-            <div className="flex items-center gap-3 p-4">
-              <div className="bg-gray-100 p-2 rounded-full">
-                <BarChart2 className="w-4 h-4 text-gray-500" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-900 text-sm">
-                  {lang === 'sw' ? 'Takwimu za Matumizi' : 'Analytics'}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {lang === 'sw'
-                    ? `Matukio ${Analytics.getSessionStats().totalEvents} ya vikao hivi · Hakuna data inayotumwa nje`
-                    : `${Analytics.getSessionStats().totalEvents} session events · No data sent externally`
-                  }
-                </p>
-              </div>
-              <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">
-                {lang === 'sw' ? 'Ndani' : 'Local'}
-              </span>
-            </div>
           </div>
         </div>
 
         {/* App Info */}
         <div className="text-center text-xs text-gray-400 py-4">
-          <p className="font-medium text-gray-600">PesaPlan v1.0.0</p>
+          <p className="font-medium">PesaPlan v1.0.0</p>
           <p className="mt-0.5">{lang === 'sw' ? 'Imetengenezwa kwa East Africa 🌍' : 'Made for East Africa 🌍'}</p>
-
-          <div className="flex items-center justify-center gap-4 mt-4 mb-1">
-            <div className="flex flex-col items-center gap-1">
-              <ReactLogo className="w-6 h-6 opacity-50" />
-              <span className="text-[9px] text-gray-400">React</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <TypescriptLogo className="w-6 h-6 opacity-50" />
-              <span className="text-[9px] text-gray-400">TypeScript</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <ViteLogo className="w-6 h-6 opacity-50" />
-              <span className="text-[9px] text-gray-400">Vite</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <TailwindLogo className="w-6 h-6 opacity-50" />
-              <span className="text-[9px] text-gray-400">Tailwind</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <SupabaseLogo className="w-6 h-6 opacity-50" />
-              <span className="text-[9px] text-gray-400">Supabase</span>
-            </div>
-          </div>
-
           <button
             onClick={() => setShowLegal(true)}
-            className="mt-3 text-xs text-gray-400 underline underline-offset-2"
+            className="mt-2 text-xs text-gray-400 underline underline-offset-2"
           >
             {lang === 'sw' ? 'Sera ya Faragha · Masharti ya Huduma' : 'Privacy Policy · Terms of Service'}
           </button>
